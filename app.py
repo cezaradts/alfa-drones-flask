@@ -1,4 +1,13 @@
+import os
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 
+app = Flask(__name__)
+
+# Pegando a variável de ambiente DATABASE_URL (você vai configurar isso no Render)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+db = SQLAlchemy(app)
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
