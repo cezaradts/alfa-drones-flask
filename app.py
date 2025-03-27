@@ -4,6 +4,19 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
+from flask import Flask, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/")
+def index():
+    return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
+
+@app.route("/test")
+def test():
+    return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando"})
 app = Flask(__name__)
 
 # Pegando a variável de ambiente DATABASE_URL (você vai configurar isso no Render)
