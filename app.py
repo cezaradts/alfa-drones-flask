@@ -1,4 +1,6 @@
 import os
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 
