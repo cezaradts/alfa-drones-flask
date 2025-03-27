@@ -1,3 +1,18 @@
+<div id="resposta" style="margin-top: 20px; font-weight: bold;">
+  Aguardando resposta da API...
+</div>
+
+<script>
+  fetch('https://alfa-drones-flask-17.onrender.com/test')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("resposta").innerText = data.mensagem;
+    })
+    .catch(error => {
+      console.error('Erro ao conectar com a API:', error);
+      document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
+    });
+</script>
 <div id="resposta">Aguardando resposta da API...</div>
 
 <script>
