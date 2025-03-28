@@ -20,7 +20,7 @@ class Contato(db.Model):
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
 
-#zerar lista de contatos
+#zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 # with app.app_context():
   #  db.drop_all()
    # db.create_all()
