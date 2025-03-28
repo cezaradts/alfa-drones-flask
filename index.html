@@ -44,7 +44,7 @@
   <!-- Scripts -->
   <script>
     // Verifica se a API está ativa
-    fetch('https://alfa-drones-flask-17.onrender.com/test')
+    fetch('https://alfa-drones-flask-21.onrender.com/test')
       .then(response => response.json())
       .then(data => {
         document.getElementById("resposta").innerText = data.mensagem;
@@ -63,7 +63,7 @@
       const email = document.getElementById("email").value;
       const mensagem = document.getElementById("mensagem").value;
 
-      fetch("https://alfa-drones-flask-17.onrender.com/contato", {
+      fetch("https://alfa-drones-flask-21.onrender.com/contato", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
