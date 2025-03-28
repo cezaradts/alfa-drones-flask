@@ -21,9 +21,9 @@ class Contato(db.Model):
     mensagem = db.Column(db.Text)
 
 #zerar lista de contatos
-with app.app_context():
-    db.drop_all()
-    db.create_all()
+# with app.app_context():
+  #  db.drop_all()
+   # db.create_all()
 
 # Rota principal
 @app.route("/")
