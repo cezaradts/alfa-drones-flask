@@ -67,8 +67,8 @@
       const telefone = document.getElementById("telefone").value;
       const mensagem = document.getElementById("mensagem").value;
 
-      fetch("https://alfa-drones-flask-21.onrender.com/contato", {
-        method: "POST",
+      fetch("https://alfa-drones-flask-21.onrender.com/contatos", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json"
         },
