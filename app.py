@@ -1,4 +1,4 @@
-git add app.py
+
 git commit -m "Adiciona rota /contato e modelo Contato"
 git push
 from flask import Flask, jsonify, request
