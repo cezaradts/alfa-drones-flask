@@ -1,6 +1,4 @@
-with app.app_context():
-    db.drop_all()
-    db.create_all()
+
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -22,8 +20,8 @@ class Contato(db.Model):
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
 
-
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 # Rota principal
