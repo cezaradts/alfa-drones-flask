@@ -1,73 +1,42 @@
-<div id="resposta" style="margin-top: 20px; font-weight: bold;">
-  Aguardando resposta da API...
-</div>
-
-<script>
-  fetch('https://alfa-drones-flask-17.onrender.com/test')
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("resposta").innerText = data.mensagem;
-    })
-    .catch(error => {
-      console.error('Erro ao conectar com a API:', error);
-      document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
-    });
-</script>
-<div id="resposta">Aguardando resposta da API...</div>
-
-<script>
-  fetch('https://alfa-drones-flask-17.onrender.com/test')
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("resposta").innerText = data.mensagem;
-    })
-    .catch(error => {
-      console.error('Erro ao conectar com a API:', error);
-      document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
-    });
-</script>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Alfa Drones</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>Bem-vindo à Alfa Drones</h1>
+  </header>
 
-<header>
-  <div class="container">
-    <h1>Alfa Drones</h1>
-    <nav>
-      <a href="/">Início</a>
-    </nav>
-  </div>
-</header>
+  <main>
+    <!-- Seu conteúdo principal aqui -->
+    <section>
+      <h2>Status da API:</h2>
+      <div id="resposta" style="font-weight: bold; color: green;">
+        Aguardando resposta da API...
+      </div>
+    </section>
+  </main>
 
-<section class="section" id="contato">
-  <h2>Fale Conosco</h2>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul style="color: green;">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  <form class="contact-form" method="POST" action="/enviar">
-    <input type="text" name="nome" placeholder="Nome" required />
-    <input type="email" name="email" placeholder="E-mail" required />
-    <input type="tel" name="telefone" placeholder="Telefone" />
-    <textarea name="mensagem" placeholder="Mensagem" rows="5" required></textarea>
-    <button type="submit">Enviar</button>
-  </form>
-</section>
+  <footer>
+    <p>&copy; 2025 Alfa Drones</p>
+  </footer>
 
-<footer>
-  <p>© 2025 Alfa Drones. Todos os direitos reservados.</p>
-</footer>
-
+  <!-- Script para integração com Flask -->
+  <script>
+    fetch('https://alfa-drones-flask-17.onrender.com/test')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("resposta").innerText = data.mensagem;
+      })
+      .catch(error => {
+        console.error('Erro ao conectar com a API:', error);
+        document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
+        document.getElementById("resposta").style.color = "red";
+      });
+  </script>
 </body>
 </html>
