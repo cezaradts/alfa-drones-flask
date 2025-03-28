@@ -83,9 +83,13 @@
       })
       .then(res => res.json())
       .then(data => {
-        document.getElementById("mensagem-resultado").innerText = data.mensagem;
-        document.getElementById("form-contato").reset();
-      })
+  document.getElementById("mensagem-resultado").innerText = data.mensagem;
+  document.getElementById("form-contato").reset();
+  // Redireciona para a página inicial após envio
+  setTimeout(() => {
+    window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
+  }, 2000); // espera 2 segundos antes de voltar
+})
       .catch(err => {
         console.error("Erro ao enviar:", err);
         document.getElementById("mensagem-resultado").innerText = "Erro ao enviar a mensagem.";
