@@ -12,12 +12,28 @@
   </header>
 
   <main>
-    <!-- Seu conteúdo principal aqui -->
     <section>
       <h2>Status da API:</h2>
       <div id="resposta" style="font-weight: bold; color: green;">
         Aguardando resposta da API...
       </div>
+    </section>
+
+    <section>
+      <h2>Fale Conosco</h2>
+      <form id="form-contato">
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required /><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required /><br><br>
+
+        <label for="mensagem">Mensagem:</label><br>
+        <textarea id="mensagem" name="mensagem" required></textarea><br><br>
+
+        <button type="submit">Enviar</button>
+      </form>
+      <div id="mensagem-resultado" style="margin-top: 10px;"></div>
     </section>
   </main>
 
@@ -25,8 +41,9 @@
     <p>&copy; 2025 Alfa Drones</p>
   </footer>
 
-  <!-- Script para integração com Flask -->
+  <!-- Scripts -->
   <script>
+    // Verifica se a API está ativa
     fetch('https://alfa-drones-flask-17.onrender.com/test')
       .then(response => response.json())
       .then(data => {
@@ -37,6 +54,32 @@
         document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
         document.getElementById("resposta").style.color = "red";
       });
+
+    // Envia o formulário de contato
+    document.getElementById("form-contato").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const mensagem = document.getElementById("mensagem").value;
+
+      fetch("https://alfa-drones-flask-17.onrender.com/contato", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nome, email, mensagem })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("mensagem-resultado").innerText = data.mensagem;
+        document.getElementById("form-contato").reset();
+      })
+      .catch(err => {
+        console.error("Erro ao enviar:", err);
+        document.getElementById("mensagem-resultado").innerText = "Erro ao enviar a mensagem.";
+      });
+    });
   </script>
 </body>
 </html>
