@@ -17,9 +17,10 @@ class Contato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100))
     email = db.Column(db.String(100))
+    telefone = db.Column(db.Integer(100))
     mensagem = db.Column(db.Text)
 
-# Criar tabela (pode remover após criar uma vez)
+
 with app.app_context():
     db.create_all()
 
@@ -39,9 +40,10 @@ def contato():
     dados = request.get_json()
     nome = dados.get("nome")
     email = dados.get("email")
+    telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
 
-    novo = Contato(nome=nome, email=email, mensagem=mensagem)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
     db.session.add(novo)
     db.session.commit()
 
