@@ -59,6 +59,7 @@ def listar_contatos():
             "id": c.id,
             "nome": c.nome,
             "email": c.email,
+            "telefone": c.telefone,
             "mensagem": c.mensagem
         })
     return jsonify(resultado)
