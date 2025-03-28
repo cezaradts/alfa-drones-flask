@@ -49,5 +49,19 @@ def contato():
 
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
 
+# Rota para ler dados do contato
+@app.route("/contatos", methods=["GET"])
+def listar_contatos():
+    contatos = Contato.query.all()
+    resultado = []
+    for c in contatos:
+        resultado.append({
+            "id": c.id,
+            "nome": c.nome,
+            "email": c.email,
+            "mensagem": c.mensagem
+        })
+    return jsonify(resultado)
+
 if __name__ == "__main__":
     app.run(debug=True)
