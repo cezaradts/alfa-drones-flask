@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contatos</title>
+</head>
+<body>
+    <h1>Lista de Contatos</h1>
+    <table border="1">
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Mensagem</th>
+        </tr>
+        {% for contato in contatos %}
+        <tr>
+            <td>{{ contato[0] }}</td>
+            <td>{{ contato[1] }}</td>
+            <td>{{ contato[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
