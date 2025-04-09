@@ -130,3 +130,8 @@ def enviar_email():
   
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route('/enviar-email')
+def enviar_email():
+    enviar_contatos_por_email()
+    return "E-mail enviado com sucesso!"
