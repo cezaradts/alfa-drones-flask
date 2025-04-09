@@ -85,10 +85,10 @@
   document.getElementById("mensagem-resultado").innerText = data.mensagem;
   document.getElementById("form-contato").reset();
 
-  // Opcional: chamar o envio de e-mail automaticamente
-  fetch("https://alfa-drones-flask-21.onrender.com/enviar-email")
-    .then(res => console.log("Disparado e-mail com contatos"))
-    .catch(err => console.error("Erro ao enviar e-mail:", err));
+  // Chamar envio de e-mail
+  fetch("/enviar-email")
+    .then(res => console.log("E-mail enviado"))
+    .catch(err => console.error("Erro:", err));
 })
   // Redireciona para a página inicial após envio
   setTimeout(() => {
