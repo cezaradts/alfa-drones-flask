@@ -82,5 +82,43 @@ def contatos_tabela():
     
     return render_template("tabela.html", contatos=dados)
 
+# Enviar tabela de contatos para um email
+
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
+import pandas as pd
+import sqlite3
+
+def enviar_contatos_por_email():
+    # Gera Excel
+    conn = sqlite3.connect('seu_banco.db')
+    df = pd.read_sql_query("SELECT nome, email, mensagem FROM contatos", conn)
+    conn.close()
+    df.to_excel("contatos.xlsx", index=False)
+
+    # Configuração de e-mail
+    remetente = "cesaradts@gmail.com"
+    senha = "0407@1966Aa!"
+    destinatario = "cezaradts@gmail.com"
+
+    msg = MIMEMultipart()
+    msg['From'] = remetente
+    msg['To'] = destinatario
+    msg['Subject'] = "Lista de Contatos"
+
+    # Anexo
+    parte = MIMEBase('application', "octet-stream")
+    with open("contatos.xlsx", "rb") as file:
+        parte.set_payload(file.read())
+    encoders.encode_base64(parte)
+    parte.add_header('Content-Disposition', 'attachment; filename="contatos.xlsx"')
+    msg.attach(parte)
+
+    # Envia
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(remetente, senha)
+        server.send_message(msg)
 if __name__ == "__main__":
     app.run(debug=True)
