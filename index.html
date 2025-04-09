@@ -81,15 +81,10 @@
         },
         body: JSON.stringify({ nome, email, telefone, mensagem })
       })
+      .then(res => res.json())
       .then(data => {
   document.getElementById("mensagem-resultado").innerText = data.mensagem;
   document.getElementById("form-contato").reset();
-
-  // Chamar envio de e-mail
-  fetch("/enviar-email")
-    .then(res => console.log("E-mail enviado"))
-    .catch(err => console.error("Erro:", err));
-})
   // Redireciona para a página inicial após envio
   setTimeout(() => {
     window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
