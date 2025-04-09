@@ -120,12 +120,13 @@ def enviar_contatos_por_email():
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
         server.login(remetente, senha)
         server.send_message(msg)
+        
         # Envia tabela para email
     
-    @app.route('/enviar-email')
+@app.route('/enviar-email')
 def enviar_email():
     enviar_contatos_por_email()
-    return "E-mail enviado com sucesso."
+    return "E-mail enviado com sucesso!"
   
 if __name__ == "__main__":
     app.run(debug=True)
