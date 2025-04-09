@@ -74,7 +74,7 @@ app = Flask(__name__)
 @app.route('/contatos-tabela')
 def contatos_tabela():
     # Acesso ao banco ou sua lógica de obtenção dos dados
-    conn = sqlite3.connect('seu_banco.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     cursor.execute("SELECT nome, email, mensagem FROM contatos")
     dados = cursor.fetchall()
