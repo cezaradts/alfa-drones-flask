@@ -74,7 +74,7 @@ app = Flask(__name__)
 @app.route('/contatos-tabela')
 def contatos_tabela():
     # Acesso ao banco ou sua lógica de obtenção dos dados
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('alfa-drones.db')
     cursor = conn.cursor()
     cursor.execute("SELECT nome, email, mensagem FROM contatos")
     dados = cursor.fetchall()
@@ -93,7 +93,7 @@ import sqlite3
 
 def enviar_contatos_por_email():
     # Gera Excel
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('alfa-drones.db')
     df = pd.read_sql_query("SELECT nome, email, mensagem FROM contatos", conn)
     conn.close()
     df.to_excel("contatos.xlsx", index=False)
