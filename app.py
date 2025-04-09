@@ -64,6 +64,23 @@ def listar_contatos():
             "mensagem": c.mensagem
         })
     return jsonify(resultado)
+    
+    # comando para gerar tabela de contatos
+from flask import Flask, render_template
+import sqlite3  # ou seu banco de dados atual
+
+app = Flask(__name__)
+
+@app.route('/contatos-tabela')
+def contatos_tabela():
+    # Acesso ao banco ou sua lógica de obtenção dos dados
+    conn = sqlite3.connect('seu_banco.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT nome, email, mensagem FROM contatos")
+    dados = cursor.fetchall()
+    conn.close()
+    
+    return render_template("tabela.html", contatos=dados)
 
 if __name__ == "__main__":
     app.run(debug=True)
