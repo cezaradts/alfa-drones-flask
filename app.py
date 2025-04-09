@@ -93,7 +93,7 @@ import sqlite3
 
 def enviar_contatos_por_email():
     # Gera Excel
-    conn = sqlite3.connect('seu_banco.db')
+    conn = sqlite3.connect('database.db')
     df = pd.read_sql_query("SELECT nome, email, mensagem FROM contatos", conn)
     conn.close()
     df.to_excel("contatos.xlsx", index=False)
