@@ -4,6 +4,9 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+with app.app_context():
+    from models import db
+    db.create_all()
 CORS(app)
 
 # Configuração do banco de dados
