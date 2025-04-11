@@ -18,11 +18,16 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
+    data_envio = db.Column(db.DateTime, default=datetime.utcnow)
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 # with app.app_context():
   #  db.drop_all()
    # db.create_all()
+
+# Cria as tabelas se não existirem
+with app.app_context():
+    db.create_all()
 
 # Rota principal
 @app.route("/")
@@ -78,9 +83,6 @@ class Contato(db.Model):
     mensagem = db.Column(db.Text)
     data_envio = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Cria as tabelas se não existirem
-with app.app_context():
-    db.create_all()
 
 # Página inicial
 @app.route('/')
