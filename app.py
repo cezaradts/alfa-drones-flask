@@ -51,12 +51,15 @@ def test():
 @app.route("/contato", methods=["POST"])
 def contato():
     dados = request.get_json()
-    nome = dados.get("nome")
-    email = dados.get("email")
-    telefone = dados.get("telefone")
-    mensagem = dados.get("mensagem")
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    telefone = db.Column(db.String(20))
+    assunto = db.Column(db.String(100))
+    mensagem = db.Column(db.Text)
+    data_envio = db.Column(db.DateTime, default=datetime.utcnow)
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, assunto=assunto, data_envio=data_envio)
     db.session.add(novo)
     db.session.commit()
 
@@ -73,7 +76,9 @@ def listar_contatos():
             "nome": c.nome,
             "email": c.email,
             "telefone": c.telefone,
-            "mensagem": c.mensagem
+            "mensagem": c.mensagem,
+            "assunto": c.assunto,
+            "data_envio": c.data_envio
         })
     return jsonify(resultado)
 
