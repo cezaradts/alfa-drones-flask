@@ -66,3 +66,12 @@ def listar_contatos():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+from flask import render_template
+from app import app, db
+from models import Contato  # Assumindo que você já tem um modelo Contato
+
+@app.route('/admin/contatos')
+def admin_contatos():
+    contatos = Contato.query.order_by(Contato.data_envio.desc()).all()
+    return render_template('admin_contatos.html', contatos=contatos)
