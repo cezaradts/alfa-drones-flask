@@ -66,3 +66,23 @@ def listar_contatos():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# Cria as tabelas se não existirem
+with app.app_context():
+    db.create_all()
+
+# Página inicial
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Painel de contatos
+@app.route('/admin/contatos')
+def admin_contatos():
+    contatos = Contato.query.order_by(Contato.data_envio.desc()).all()
+    return render_template('admin_contatos.html', contatos=contatos)
+
+# Rodar localmente
+if _name_ == '_main_':
+    app.run(debug=True)
