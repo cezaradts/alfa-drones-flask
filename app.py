@@ -68,6 +68,16 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
+# Modelo de Contato
+class Contato(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    telefone = db.Column(db.String(20))
+    assunto = db.Column(db.String(100))
+    mensagem = db.Column(db.Text)
+    data_envio = db.Column(db.DateTime, default=datetime.utcnow)
+
 # Cria as tabelas se não existirem
 with app.app_context():
     db.create_all()
