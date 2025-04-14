@@ -2,12 +2,16 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
-#DQUI
 from flask import send_file
 import pandas as pd
 import io
 from models import Contato  # ou o nome correto do seu modelo
 
+
+
+app = Flask(__name__)
+CORS(app)
+#daqui
 @app.route('/exportar-contatos')
 def exportar_contatos():
     contatos = Contato.query.all()
@@ -32,9 +36,6 @@ def exportar_contatos():
 
 #ate aqui
 
-
-app = Flask(__name__)
-CORS(app)
 
 # Configuração do banco de dados
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
