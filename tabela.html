@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contatos Alfa Drones</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Lista de Contatos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Mensagem</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-contatos">
+      <!-- Os dados serão inseridos aqui via JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    fetch('https://alfa-drones-flask-21.onrender.com/contatos')
+      .then(response => response.json())
+      .then(contatos => {
+        const tabela = document.getElementById('tabela-contatos');
+        contatos.forEach(contato => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td>${contato.nome}</td>
+            <td>${contato.email}</td>
+            <td>${contato.telefone}</td>
+            <td>${contato.mensagem}</td>
+            <td>${contato.data}</td>
+          `;
+          tabela.appendChild(linha);
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao carregar os contatos:', error);
+      });
+  </script>
+</body>
+</html>
