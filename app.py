@@ -2,6 +2,36 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+#DQUI
+from flask import send_file
+import pandas as pd
+import io
+from models import Contato  # ou o nome correto do seu modelo
+
+@app.route('/exportar-contatos')
+def exportar_contatos():
+    contatos = Contato.query.all()
+    dados = [{
+        'Nome': c.nome,
+        'Email': c.email,
+        'Telefone': c.telefone',
+        'Mensagem': c.mensagem,
+        'Data': c.data.strftime('%d/%m/%Y %H:%M') if c.data else ''
+    } for c in contatos]
+
+    df = pd.DataFrame(dados)
+    
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Contatos')
+
+    output.seek(0)
+    return send_file(output, download_name='contatos.xlsx', as_attachment=True)
+
+
+
+#ate aqui
+
 
 app = Flask(__name__)
 CORS(app)
