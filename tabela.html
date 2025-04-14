@@ -23,6 +23,7 @@
   <table>
     <thead>
       <tr>
+          <th>Id</th>
         <th>Nome</th>
         <th>Email</th>
         <th>Telefone</th>
@@ -42,6 +43,7 @@
         contatos.forEach(contato => {
           const linha = document.createElement('tr');
           linha.innerHTML = `
+          <td>${contato.id}</td>
             <td>${contato.nome}</td>
             <td>${contato.email}</td>
             <td>${contato.telefone}</td>
