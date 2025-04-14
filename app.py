@@ -14,7 +14,7 @@ def exportar_contatos():
     dados = [{
         'Nome': c.nome,
         'Email': c.email,
-        'Telefone': c.telefone',
+        'Telefone': c.telefone,
         'Mensagem': c.mensagem,
         'Data': c.data.strftime('%d/%m/%Y %H:%M') if c.data else ''
     } for c in contatos]
