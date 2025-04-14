@@ -60,6 +60,27 @@ def contato():
     db.session.commit()
 
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
+# Rota planilha
+@app.route("/exportar-contatos" , methods=["GET"])
+def exportar_contatos():
+    contatos = Contato.query.all()
+    dados = [{
+        'Nome': c.nome,
+        'Email': c.email,
+        'Telefone': c.telefone,
+        'Mensagem': c.mensagem,
+        'Data': c.data.strftime('%d/%m/%Y %H:%M') if c.data else ''
+    } for c in contatos]
+
+    df = pd.DataFrame(dados)
+    
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Contatos')
+
+    output.seek(0)
+    return send_file(output, download_name='contatos.xlsx', as_attachment=True)
+
 
 # Rota para ler dados do contato
 @app.route("/contatos", methods=["GET"])
