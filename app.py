@@ -68,7 +68,7 @@ def listar_contatos():
 
 # Banco de dados para finalizar
 class Finalizar(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    ido = db.Column(db.Integer, primary_key=True)
     Nome_Completo = db.Column(db.String(100))
     CPF = db.Column(db.String(20))
     Endereço = db.Column(db.String(20))
@@ -92,7 +92,7 @@ def test():
 # Rota de contato
 @app.route("/contato", methods=["POST"])
 def finalizar():
-    dados1 = request.get_json()
+    ido = request.get_json()
     Nome_Completo= dados.get("Nome_Completo")
     CPF = dados.get("CPF")
     Endereço = dados.get("Endereço")
@@ -111,7 +111,7 @@ def listar_compras():
     resultado = []
     for c in contatos:
         resultado.append({
-            "dados1": c.id,
+            "ido": c.ido,
             "Nome_Completo": c.Nome_Completo,
             "CPF": c.CPF,
             "Endereço": c.Endereço,
