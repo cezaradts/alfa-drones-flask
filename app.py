@@ -85,8 +85,8 @@ def index():
     return jsonify({"mensagem": "API Alfa Drones Compra está funcionando!"})
 
 # Rota de teste
-@app.route1("/test")
-def test():
+@app.route1("/teste")
+def teste():
     return jsonify({"status": "OK", "mensagem": "Rota de teste Compra funcionando perfeitamente!"})
 
 # Rota de contato
