@@ -258,6 +258,36 @@
         localStorage.removeItem("carrinho"); // Limpa o carrinho
         window.location.href = "https://cezaradts.github.io/alfa-drones/modelos.html"; // Redireciona para a página de modelos
       });
+       // Envia o formulário de compra
+    document.getElementById("form-compra").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nome_compelto = document.getElementById("nome_completo").value;
+      const endereco = document.getElementById("endereco").value;
+      const cpf = document.getElementById("cpf").value;
+      const cep = document.getElementById("cep").value;
+
+      fetch("https://alfa-drones-flask-21.onrender.com/compra", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nome_completo, endereco, cpf, cep })
+      })
+      .then(res => res.json())
+      .then(data => {
+  document.getElementById("mensagem-resultado").innerText = data.mensagem;
+  document.getElementById("form-compra").reset();
+  // Redireciona para a página inicial após envio
+  setTimeout(() => {
+    window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
+  }, 1000); // espera 1 segundo antes de voltar
+})
+      .catch(err => {
+        console.error("Erro ao enviar:", err);
+        document.getElementById("mensagem-resultado").innerText = "Erro ao enviar a mensagem.";
+      });
+    });
     </script>
   </body>
 </html>
