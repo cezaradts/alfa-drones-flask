@@ -51,7 +51,7 @@ def contato():
     Endereço = dados.get("Endereço")
     CEP = dados.get("CEP")
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, Nome_Completo, CPF, Endereço, CEP)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, Nome_Completo=Nome_Completo, CPF=CPF, Endereço=Endereço, CEP=CEP)
     db.session.add(novo)
     db.session.commit()
 
