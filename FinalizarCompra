@@ -11,8 +11,8 @@
       <div class="container">
         <img src="images/logo.png" alt="Alfa Drones" class="logo" />
         <nav>
-          <a href="index.html">Início</a>
-          <a href="modelos.html">Modelos</a>
+          <a href="https://cezaradts.github.io/alfa-drones/index.html">Início</a>
+          <a href="https://cezaradts.github.io/alfa-drones/modelos.html"</a>
           <a href="https://cezaradts.github.io/alfa-drones-flask/carrinho.html">Carrinho</a>
         </nav>
       </div>
