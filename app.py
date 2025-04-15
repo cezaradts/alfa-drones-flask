@@ -67,7 +67,7 @@ def listar_contatos():
 # Finalizar a partir daqui
 
 # Banco de dados para finalizar
-class Finalizar(db.Model):
+class Finalizar(db.Modelo):
     ido = db.Column(db.Integer, primary_key=True)
     Nome_Completo = db.Column(db.String(100))
     CPF = db.Column(db.String(20))
