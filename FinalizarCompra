@@ -256,7 +256,7 @@
       btnFinalizarCompra.addEventListener("click", () => {
         alert("Compra finalizada com sucesso! Obrigado por comprar na Alfa Drones.");
         localStorage.removeItem("carrinho"); // Limpa o carrinho
-        window.location.href = "modelos.html"; // Redireciona para a página de modelos
+        window.location.href = "https://cezaradts.github.io/alfa-drones/modelos.html"; // Redireciona para a página de modelos
       });
     </script>
   </body>
