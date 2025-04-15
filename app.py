@@ -27,7 +27,7 @@ class Contato(db.Model):
 # Rota principal
 @app.route("/")
 def index():
-    return jsonify({"mensagem": "API Alfa Drones Contato está funcionando!"})
+    return jsonify({"mensagem": "API Alfa Drones Contato esta funcionando!"})
 
 # Rota de teste
 @app.route("/test")
@@ -82,7 +82,7 @@ class Compra(db.Modelo):
 # Rota principal
 @app.route1("/")
 def index():
-    return jsonify({"mensagem": "API Alfa Drones Compra está funcionando!"})
+    return jsonify({"mensagem": "API Alfa Drones Compra esta funcionando!"})
 
 # Rota de teste
 @app.route1("/teste")
