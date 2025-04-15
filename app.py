@@ -18,10 +18,10 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
-    Nome_Completo = db.Column(db.String(100))
-    CPF = db.Column(db.String(20))
-    Endereço = db.Column(db.String(20))
-    CEP = db.Column(db.String(20))
+    nome_completo = db.Column(db.String(100))
+    cpf = db.Column(db.String(20))
+    endereço = db.Column(db.String(20))
+    cep = db.Column(db.String(20))
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
@@ -46,12 +46,12 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
-    Nome_Completo= dados.get("Nome_Completo")
-    CPF = dados.get("CPF")
-    Endereço = dados.get("Endereço")
-    CEP = dados.get("CEP")
+    nome_completo= dados.get("nome_completo")
+    cpf = dados.get("cpf")
+    endereço = dados.get("endereço")
+    cep = dados.get("CEP")
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, Nome_Completo=Nome_Completo, CPF=CPF, Endereço=Endereço, CEP=CEP)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereço=endereço, CEP=CEP)
     db.session.add(novo)
     db.session.commit()
 
@@ -69,10 +69,10 @@ def listar_contatos():
             "email": c.email,
             "telefone": c.telefone,
             "mensagem": c.mensagem
-             "Nome_Completo": c.Nome_Completo,
-            "CPF": c.CPF,
-            "Endereço": c.Endereço,
-            "CEP": c.CEP
+             "nome_completo": c.nome_completo,
+            "cpf": c.cpf,
+            "endereço": c.endereço,
+            "cep": c.cep
         })
     return jsonify(resultado)
 
