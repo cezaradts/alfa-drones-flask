@@ -18,6 +18,10 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
+    Nome_Completo = db.Column(db.String(100))
+    CPF = db.Column(db.String(20))
+    Endereço = db.Column(db.String(20))
+    CEP = db.Column(db.String(20))
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
@@ -42,8 +46,12 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
+    Nome_Completo= dados.get("Nome_Completo")
+    CPF = dados.get("CPF")
+    Endereço = dados.get("Endereço")
+    CEP = dados.get("CEP")
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, Nome_Completo, CPF, Endereço, CEP)
     db.session.add(novo)
     db.session.commit()
 
@@ -61,64 +69,13 @@ def listar_contatos():
             "email": c.email,
             "telefone": c.telefone,
             "mensagem": c.mensagem
-        })
-    return jsonify(resultado)
-
-# Finalizar a partir daqui
-
-# Banco de dados para finalizar
-class Compra(db.Modelo):
-    ido = db.Column(db.Integer, primary_key=True)
-    Nome_Completo = db.Column(db.String(100))
-    CPF = db.Column(db.String(20))
-    Endereço = db.Column(db.String(20))
-    CEP = db.Column(db.String(20))
-
-#zerar lista  (tirar # da frente das 3 proximas linhas)
-#with app.app_context():
- #  db.drop_all()
- #  db.create_all()
-
-# Rota principal
-@app.route1("/")
-def index():
-    return jsonify({"mensagem": "API Alfa Drones Compra esta funcionando!"})
-
-# Rota de teste
-@app.route1("/teste")
-def teste():
-    return jsonify({"status": "OK", "mensagem": "Rota de teste Compra funcionando perfeitamente!"})
-
-# Rota de contato
-@app.route1("/compra", methods=["POST"])
-def compra():
-    ido = request.get_json()
-    Nome_Completo= dados.get("Nome_Completo")
-    CPF = dados.get("CPF")
-    Endereço = dados.get("Endereço")
-    CEP = dados.get("CEP")
-
-    novo = Compra (Nome_Completo=Nome_Completo, CPF=CPF,Endereço=Endereço, CEP=CEP)
-    db.session.add(novo)
-    db.session.commit()
-
-    return jsonify({"mensagem": "Compra enviada com sucesso!"})
-
-# Rota para ler dados da compra
-@app.route("/compras", methods=["GET"])
-def listar_compras():
-    compras = Compra.query.all()
-    resultados = []
-    for c in compras:
-        resultados.append({
-            "ido": c.ido,
-            "Nome_Completo": c.Nome_Completo,
+             "Nome_Completo": c.Nome_Completo,
             "CPF": c.CPF,
             "Endereço": c.Endereço,
             "CEP": c.CEP
         })
-    return jsonify(resultados)
-# Termina aqui
+    return jsonify(resultado)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
