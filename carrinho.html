@@ -134,37 +134,6 @@
         document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
         document.getElementById("resposta").style.color = "red";
       });
-
-    // Envia o formulário de contato
-    document.getElementById("form-contato").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("telefone").value;
-      const mensagem = document.getElementById("mensagem").value;
-
-      fetch("https://alfa-drones-flask-21.onrender.com/carrinho", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ nome, email, telefone, mensagem })
-      })
-      .then(res => res.json())
-      .then(data => {
-  document.getElementById("mensagem-resultado").innerText = data.mensagem;
-  document.getElementById("form-contato").reset();
-  // Redireciona para a página inicial após envio
-  setTimeout(() => {
-    window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
-  }, 1000); // espera 1 segundo antes de voltar
-})
-      .catch(err => {
-        console.error("Erro ao enviar:", err);
-        document.getElementById("mensagem-resultado").innerText = "Erro ao enviar a mensagem.";
-      });
-    });
   </script>
 </body>
 </html>
