@@ -67,7 +67,7 @@ def listar_contatos():
 # Finalizar a partir daqui
 
 # Banco de dados para finalizar
-class Finalizar(db.Modelo):
+class Compra(db.Modelo):
     ido = db.Column(db.Integer, primary_key=True)
     Nome_Completo = db.Column(db.String(100))
     CPF = db.Column(db.String(20))
@@ -80,25 +80,25 @@ class Finalizar(db.Modelo):
  #  db.create_all()
 
 # Rota principal
-@app.route("/")
+@app.route1("/")
 def index():
     return jsonify({"mensagem": "API Alfa Drones Compra está funcionando!"})
 
 # Rota de teste
-@app.route("/test")
+@app.route1("/test")
 def test():
     return jsonify({"status": "OK", "mensagem": "Rota de teste Compra funcionando perfeitamente!"})
 
 # Rota de contato
-@app.route("/contato", methods=["POST"])
-def finalizar():
+@app.route1("/compra", methods=["POST"])
+def compra():
     ido = request.get_json()
     Nome_Completo= dados.get("Nome_Completo")
     CPF = dados.get("CPF")
     Endereço = dados.get("Endereço")
     CEP = dados.get("CEP")
 
-    novo = Contato(Nome_Completo=Nome_Completo, CPF=CPF,Endereço=Endereço, CEP=CEP)
+    novo = Compra (Nome_Completo=Nome_Completo, CPF=CPF,Endereço=Endereço, CEP=CEP)
     db.session.add(novo)
     db.session.commit()
 
@@ -107,17 +107,17 @@ def finalizar():
 # Rota para ler dados da compra
 @app.route("/compras", methods=["GET"])
 def listar_compras():
-    contatos = Contato.query.all()
-    resultado = []
-    for c in contatos:
-        resultado.append({
+    compras = Compra.query.all()
+    resultados = []
+    for c in compras:
+        resultados.append({
             "ido": c.ido,
             "Nome_Completo": c.Nome_Completo,
             "CPF": c.CPF,
             "Endereço": c.Endereço,
             "CEP": c.CEP
         })
-    return jsonify(resultado)
+    return jsonify(resultados)
 # Termina aqui
 
 if __name__ == "__main__":
