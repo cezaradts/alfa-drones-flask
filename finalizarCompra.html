@@ -258,6 +258,19 @@
         localStorage.removeItem("carrinho"); // Limpa o carrinho
         window.location.href = "https://cezaradts.github.io/alfa-drones/index.html"; // Redireciona para a página inical
       });
+      #novo
+        fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
+  method: "POST",
+  headers: {"Content-Type": "application/json"},
+  body: JSON.stringify({
+    nome_completo: document.getElementById("nome").value,
+    cpf: document.getElementById("cpf").value,
+    produto: JSON.parse(localStorage.getItem("carrinho")).map(i => i.modelo).join(", "),
+    preco: JSON.parse(localStorage.getItem("carrinho")).reduce((a, i) => a + parseFloat(i.preco), 0)
+  })
+})
+.then(res => res.json())
+.then(data => alert(data.mensagem));
     </script>
   </body>
 </html>
