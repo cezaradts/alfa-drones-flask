@@ -76,7 +76,36 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
+#novas informações para vendas
+from datetime import datetime
 
+@app.route("/comprar", methods=["POST"])
+def comprar():
+    dados = request.get_json()
+    nova_compra = Compra(
+        nome_completo=dados.get("nome_completo"),
+        cpf=dados.get("cpf"),
+        produto=dados.get("produto"),
+        preco=dados.get("preco")
+    )
+    db.session.add(nova_compra)
+    db.session.commit()
+    return jsonify({"mensagem": "Compra registrada com sucesso!"})
+  
+#rota de vendas
+@app.route("/relatorio_compras", methods=["GET"])
+def relatorio_compras():
+    compras = Compra.query.order_by(Compra.data.desc()).all()
+    resultado = []
+    for c in compras:
+        resultado.append({
+            "nome_completo": c.nome_completo,
+            "cpf": c.cpf,
+            "produto": c.produto,
+            "preco": c.preco,
+            "data": c.data.strftime('%d/%m/%Y %H:%M')
+        })
+    return jsonify(resultado)
 if __name__ == "__main__":
     app.run(debug=True)
     app.run(debug=True)
