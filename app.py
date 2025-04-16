@@ -116,6 +116,8 @@ def relatorio_compras():
     return jsonify(resultado)
 
 #rota de compras
+from datetime import datetime
+
 @app.route("/comprar", methods=["POST"])
 def comprar():
     dados = request.get_json()
