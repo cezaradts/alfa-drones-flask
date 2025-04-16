@@ -10,8 +10,8 @@ header {
   color: #fff;
   padding: 20px;
 }
-.logo {
-  height: 80px;
+logo {
+  height: 36px;
 }
 .container {
   max-width: 1200px;
