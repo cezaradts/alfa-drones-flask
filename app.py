@@ -20,7 +20,7 @@ class Contato(db.Model):
     mensagem = db.Column(db.Text)
     nome_completo = db.Column(db.String(100))
     cpf = db.Column(db.String(20))
-    endereço = db.Column(db.String(20))
+    endereco = db.Column(db.String(20))
     cep = db.Column(db.String(20))
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
@@ -48,10 +48,10 @@ def contato():
     mensagem = dados.get("mensagem")
     nome_completo= dados.get("nome_completo")
     cpf = dados.get("cpf")
-    endereço = dados.get("endereço")
+    endereco = dados.get("endereco")
     cep = dados.get("CEP")
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereço=endereço, CEP=CEP)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereco=endereco, CEP=CEP)
     db.session.add(novo)
     db.session.commit()
 
@@ -71,7 +71,7 @@ def listar_contatos():
             "mensagem": c.mensagem
              "nome_completo": c.nome_completo,
             "cpf": c.cpf,
-            "endereço": c.endereço,
+            "endereco": c.endereco,
             "cep": c.cep
         })
     return jsonify(resultado)
