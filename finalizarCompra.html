@@ -76,6 +76,24 @@
 
     // Adiciona a classe ao botão de finalizar compra
     finalizarCompraButton.className = "finalizar-compra";
+      
+      <script>
+fetch("https://https://cezaradts.github.io/alfa-drones-flask/comprar", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    nome_completo: "Maria Souza",
+    cpf: "000.111.222-33",
+    produto: "Drone Sky Pro",
+    preco: 2899.90
+  })
+})
+.then(response => response.json())
+.then(data => alert(data.mensagem))
+.catch(error => console.error("Erro:", error));
+</script>
 
     // Adiciona funcionalidade para exibir mensagem ao limpar o carrinho
     limparCarrinhoButton.addEventListener("click", () => {
