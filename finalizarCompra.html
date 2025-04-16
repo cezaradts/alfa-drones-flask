@@ -256,6 +256,21 @@
      // Seleciona o botão de finalizar compra (já definido no HTML)
 const btnFinalizarCompra = document.getElementById("btn-finalizar-compra");
 
+     //nova informação
+      fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
+  method: "POST",
+  headers: {"Content-Type": "application/json"},
+  body: JSON.stringify({
+    nome_completo: document.getElementById("nome").value,
+    cpf: document.getElementById("cpf").value,
+    produto: JSON.parse(localStorage.getItem("carrinho")).map(i => i.modelo).join(", "),
+    preco: JSON.parse(localStorage.getItem("carrinho")).reduce((a, i) => a + parseFloat(i.preco), 0)
+  })
+})
+.then(res => res.json())
+.then(data => alert(data.mensagem));
+//acaba aqui nova informaç!ao
+    
 // Adiciona/atualiza o evento de clique para finalizar a compra com envio ao backend
 btnFinalizarCompra.addEventListener("click", () => {
     // 1. Reunir dados do carrinho, cliente e pagamento
