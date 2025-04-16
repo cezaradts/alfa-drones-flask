@@ -1,4 +1,6 @@
  <td>${contato.mensagem}</td>from flask import Flask, jsonify, request
+from datetime import datetime
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -8,6 +10,7 @@ CORS(app)
 
 # Configuração do banco de dados
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///alfa_drones.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
