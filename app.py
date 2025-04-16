@@ -32,10 +32,14 @@ class Compra(db.Model):
     preco = db.Column(db.Float)
     data = db.Column(db.DateTime, default=datetime.utcnow)
  
-#zerar lista de contatos (tirar # da frente das 3 proximas linhas)
-with app.app_context():
-   db.drop_all()
-  db.create_all()
+ #classe finalizar
+class Finalizar(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Nome_Completo = db.Column(db.String(100))
+    CPF = db.Column(db.String(20))
+    Endereço = db.Column(db.String(200))
+    CEP = db.Column(db.String(20))
+ 
 
 # Rota principal
 @app.route("/")
@@ -139,6 +143,11 @@ def relatorio_compras():
             "data": c.data.strftime('%d/%m/%Y %H:%M')
         })
     return jsonify(resultado)
+
+#zerar lista de contatos (tirar # da frente das 3 proximas linhas)
+with app.app_context():
+   db.drop_all()
+  db.create_all()
  
 if __name__ == "__main__":
     app.run(debug=True)
