@@ -23,10 +23,19 @@ class Contato(db.Model):
     endereco = db.Column(db.String(20))
     cep = db.Column(db.String(20))
 
+#Banco de dados das compras/vendas
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100))
+    cpf = db.Column(db.String(20))
+    produto = db.Column(db.String(100))
+    preco = db.Column(db.Float)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
+
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
-#with app.app_context():
- #  db.drop_all()
- #  db.create_all()
+with app.app_context():
+  db.drop_all()
+  db.create_all()
 
 # Rota principal
 @app.route("/")
