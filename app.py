@@ -58,11 +58,11 @@ def contato():
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
 
 # Rota para ler dados do contato
-@app.route("/contatos", methods=["GET"])
-def listar_contatos():
+@app.route("/contatas", methods=["GET"])
+def listar_contatas():
     contatos = Contato.query.all()
     resultado = []
-    for c in contatos:
+    for c in contatas:
         resultado.append({
             "id": c.id,
             "nome": c.nome,
