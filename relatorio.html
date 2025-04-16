@@ -1,44 +1,12 @@
-<table id="tabelaVendas">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Data</th>
-            <th>Cliente</th>
-            <th>Produto</th>
-            <th>Valor</th>
-            <th>Pagamento</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Dados serão preenchidos via JS -->
-    </tbody>
+<table>
+    <tr>
+        <th>Comprador</th>
+        <th>Produto</th>
+    </tr>
+    {% for comprador, produto in relatorio %}
+    <tr>
+        <td>{{ comprador }}</td>
+        <td>{{ produto }}</td>
+    </tr>
+    {% endfor %}
 </table>
-
-<script>
-fetch('https://seu-app-no-render.com/api/relatorio-vendas')
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const tabela = document.querySelector('#tabelaVendas tbody');
-            data.vendas.forEach(venda => {
-                const linha = document.createElement('tr');
-                linha.innerHTML = `
-                    <td>${venda.id}</td>
-                    <td>${new Date(venda.data_compra).toLocaleString()}</td>
-                    <td>${venda.nome_completo}<br><small>${venda.email}</small></td>
-                    <td>${venda.produto_selecionado}</td>
-                    <td>R$ ${venda.valor_total.toFixed(2).replace('.', ',')}</td>
-                    <td>${venda.forma_pagamento}</td>
-                    <td>${venda.status}</td>
-                `;
-                tabela.appendChild(linha);
-            });
-            
-            // Atualizar totais no dashboard
-            document.getElementById('totalVendas').textContent = data.totais.total_vendas;
-            document.getElementById('valorTotalVendas').textContent = 
-                'R$ ' + data.totais.valor_total.toFixed(2).replace('.', ',');
-        }
-    });
-</script>
