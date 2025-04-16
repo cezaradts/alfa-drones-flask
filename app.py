@@ -76,6 +76,33 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100))
+    cpf = db.Column(db.String(20))
+    produto = db.Column(db.String(100))
+    preco = db.Column(db.Float)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route("/comprar", methods=["POST"])
+def comprar():
+    dados = request.json
+    nova_compra = Compra(**dados)
+    db.session.add(nova_compra)
+    db.session.commit()
+    return jsonify({"mensagem": "Compra registrada!"})
+
+@app.route("/relatorio_compras")
+def relatorio_compras():
+    compras = Compra.query.order_by(Compra.data.desc()).all()
+    return jsonify([{
+        "nome_completo": c.nome_completo,
+        "cpf": c.cpf,
+        "produto": c.produto,
+        "preco": c.preco,
+        "data": c.data.strftime('%d/%m/%Y %H:%M')
+    } for c in compras])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
