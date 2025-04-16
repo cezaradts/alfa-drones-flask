@@ -76,24 +76,6 @@
 
     // Adiciona a classe ao botão de finalizar compra
     finalizarCompraButton.className = "finalizar-compra";
-      
-      <script>
-fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    nome_completo: "Maria Souza",
-    cpf: "000.111.222-33",
-    produto: "Drone Sky Pro",
-    preco: 2899.90
-  })
-})
-.then(response => response.json())
-.then(data => alert(data.mensagem))
-.catch(error => console.error("Erro:", error));
-</script>
 
     // Adiciona funcionalidade para exibir mensagem ao limpar o carrinho
     limparCarrinhoButton.addEventListener("click", () => {
@@ -276,41 +258,6 @@ fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
         localStorage.removeItem("carrinho"); // Limpa o carrinho
         window.location.href = "https://cezaradts.github.io/alfa-drones/index.html"; // Redireciona para a página inical
       });
-      #novo lancar no banco de dados
-    
-fetch('https://alfa-drones-flask-21.onrender.com/api/processar-compra', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        nome_completo: dadosDoFormulario.nome,
-        email: dadosDoFormulario.email,
-        cpf: dadosDoFormulario.cpf,
-        telefone: dadosDoFormulario.telefone,
-        cep: dadosDoFormulario.cep,
-        endereco: dadosDoFormulario.endereco,
-        numero: dadosDoFormulario.numero,
-        complemento: dadosDoFormulario.complemento,
-        cidade: dadosDoFormulario.cidade,
-        estado: dadosDoFormulario.estado,
-        produto_selecionado: dadosDoFormulario.produto,
-        valor_total: dadosDoFormulario.valor,
-        forma_pagamento: dadosDoFormulario.pagamento,
-        codigo_transacao: respostaGatewayPagamento.id, // se aplicável
-        dados_pagamento: respostaGatewayPagamento // se aplicável
-    })
-})
-.then(response => response.json())
-.then(data => {
-    if (data.success) {
-        // Redirecionar ou mostrar mensagem de sucesso
-        console.log('Compra ID:', data.compra_id);
-    } else {
-        // Tratar erro
-        console.error('Erro:', data.error);
-    }
-});
     </script>
   </body>
 </html>
