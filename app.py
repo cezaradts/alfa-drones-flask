@@ -146,6 +146,17 @@ def relatorio_compras():
         })
     return jsonify(resultado)
 
+#criar uma compra
+POST /comprar
+Content-Type: application/json
+
+{
+  "nome_completo": "Carlos da Silva",
+  "cpf": "123.456.789-00",
+  "produto": "Drone Note 14 Pro Plus",
+  "preco": 3599.99
+}
+
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 with app.app_context():
    db.drop_all()
