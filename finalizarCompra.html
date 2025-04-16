@@ -253,106 +253,11 @@
       });
 
       // Finalizar compra
-     // Seleciona o botão de finalizar compra (já definido no HTML)
-const btnFinalizarCompra = document.getElementById("btn-finalizar-compra");
-
-     //nova informação
-      fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
-  method: "POST",
-  headers: {"Content-Type": "application/json"},
-  body: JSON.stringify({
-    nome_completo: document.getElementById("nome").value,
-    cpf: document.getElementById("cpf").value,
-    produto: JSON.parse(localStorage.getItem("carrinho")).map(i => i.modelo).join(", "),
-    preco: JSON.parse(localStorage.getItem("carrinho")).reduce((a, i) => a + parseFloat(i.preco), 0)
-  })
-})
-.then(res => res.json())
-.then(data => alert(data.mensagem));
-//acaba aqui nova informaç!ao
-    
-// Adiciona/atualiza o evento de clique para finalizar a compra com envio ao backend
-btnFinalizarCompra.addEventListener("click", () => {
-    // 1. Reunir dados do carrinho, cliente e pagamento
-    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
-    // Dados do cliente (Etapa 1)
-    const nome = document.getElementById("nome").value;
-    const cpf = document.getElementById("cpf").value;
-    const endereco = document.getElementById("endereco").value;
-    const cep = document.getElementById("cep").value;
-
-    // Método de pagamento selecionado (Etapa 2)
-    const metodoPagamento = document.querySelector('input[name="pagamento"]:checked').value;
-
-    // Detalhes de pagamento (se for cartão, pegar campos da Etapa 3)
-    let detalhesPagamento = { metodo: metodoPagamento };
-    if (metodoPagamento === "credito" || metodoPagamento === "debito") {
-        detalhesPagamento.numero_cartao = document.getElementById("numero-cartao").value;
-        detalhesPagamento.nome_cartao   = document.getElementById("nome-cartao").value;
-        detalhesPagamento.validade_cartao = document.getElementById("validade-cartao").value;
-        detalhesPagamento.cvv_cartao    = document.getElementById("cvv-cartao").value;
-    }
-    // (Para PIX ou boleto, não há dados extras além do método)
-
-    // Monta objeto com todos os dados da compra
-    const dadosCompra = {
-        cliente: {
-            nome: nome,
-            cpf: cpf,
-            endereco: endereco,
-            cep: cep
-        },
-        itens: carrinho,           // lista de itens do carrinho
-        pagamento: detalhesPagamento
-    };
-
-    // 2. Enviar os dados para o backend Flask (/comprar) via fetch
-    fetch("https://alfa-drones-flask-21.onrender.com/comprar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dadosCompra)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Erro na requisição: " + response.status);
-        }
-        return response.json(); // espera que o backend retorne JSON (por ex., {mensagem: "..."})
-    })
-    .then(data => {
-        // 3. Sucesso no envio: notificar usuário e limpar carrinho
-        const mensagem = data.mensagem || "Compra finalizada com sucesso! Obrigado por comprar na Alfa Drones.";
-        alert(mensagem);
-        localStorage.removeItem("carrinho"); // limpa o carrinho armazenado
-        // 4. Redirecionar de volta para a página de modelos (loja)
-        window.location.href = "https://cezaradts.github.io/alfa-drones/modelos.html";
-    })
-    .catch(error => {
-        // Tratar erro na comunicação ou resposta
-        console.error("Erro ao finalizar a compra:", error);
-        alert("Ocorreu um erro ao finalizar a compra. Por favor, tente novamente.");
-    });
-});
-      
-      const dadosCompra = {
-  cliente: {
-    nome: /* valor do input nome */,
-    cpf: /* valor do input cpf */,
-    endereco: /* valor do input endereco */,
-    cep: /* valor do input cep */
-  },
-  carrinho: /* array de itens do LocalStorage */,
-  pagamento: {
-    metodo: /* ex: "credito", "pix", etc. */,
-    // se cartão:
-    numero_cartao: /* valor input número do cartão, se aplicável */,
-    nome_cartao: /* valor input nome no cartão, se aplicável */,
-    validade_cartao: /* valor input validade, se aplicável */,
-    cvv_cartao: /* valor input CVV, se aplicável */
-  }
-};
+      btnFinalizarCompra.addEventListener("click", () => {
+        alert("Compra finalizada com sucesso! Obrigado por comprar na Alfa Drones.");
+        localStorage.removeItem("carrinho"); // Limpa o carrinho
+        window.location.href = "https://cezaradts.github.io/alfa-drones/index.html"; // Redireciona para a página inical
+      });
     </script>
   </body>
 </html>
