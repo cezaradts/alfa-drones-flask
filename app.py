@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+ <td>${contato.mensagem}</td>from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -60,7 +60,7 @@ def contato():
 # Rota para ler dados do contato
 @app.route("/contatas", methods=["GET"])
 def listar_contatas():
-    contatos = Contato.query.all()
+    contatas = Contato.query.all()
     resultado = []
     for c in contatas:
         resultado.append({
