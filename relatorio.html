@@ -1,0 +1,12 @@
+<table>
+    <tr>
+        <th>Comprador</th>
+        <th>Produto</th>
+    </tr>
+    {% for comprador, produto in relatorio %}
+    <tr>
+        <td>{{ comprador }}</td>
+        <td>{{ produto }}</td>
+    </tr>
+    {% endfor %}
+</table>
