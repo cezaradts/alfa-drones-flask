@@ -11,7 +11,8 @@ header {
   padding: 20px;
 }
 .logo {
-  height: 36px;
+  width: 150px; 
+  height: auto; /* Mantém a proporção da imagem */
 }
 .container {
   max-width: 1200px;
