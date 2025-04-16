@@ -259,10 +259,10 @@
         window.location.href = "https://cezaradts.github.io/alfa-drones/modelos.html"; // Redireciona para a página de modelos
       });
        // Envia o formulário de compra
-    document.getElementById("form-compra").addEventListener("submit", function (e) {
+    document.getElementById("form-contato").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const nome_compelto = document.getElementById("nome_completo").value;
+      const nome_completo = document.getElementById("nome_completo").value;
       const endereco = document.getElementById("endereco").value;
       const cpf = document.getElementById("cpf").value;
       const cep = document.getElementById("cep").value;
@@ -277,7 +277,7 @@
       .then(res => res.json())
       .then(data => {
   document.getElementById("mensagem-resultado").innerText = data.mensagem;
-  document.getElementById("form-compra").reset();
+  document.getElementById("form-contato").reset();
   // Redireciona para a página inicial após envio
   setTimeout(() => {
     window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
