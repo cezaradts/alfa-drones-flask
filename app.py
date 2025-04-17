@@ -1,4 +1,4 @@
- <td>${contato.mensagem}</td>from flask import Flask, jsonify, request
+<td>${contato.mensagem}</td>from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -75,32 +75,34 @@ def listar_contatos():
             "cep": c.cep
         })
     return jsonify(resultado)
-@app.route("/finalizar", methods=["POST"])
-def finalizar():
-    dados = request.get_json()
-    nome = dados.get("Nome_Completo")
-    cpf = dados.get("CPF")
-    endereco = dados.get("Endereço")
-    cep = dados.get("CEP")
-    
-    novo = Finalizar(Nome_Completo=nome, CPF=cpf, Endereço=endereco, CEP=cep)
-    db.session.add(novo)
-    db.session.commit()
-    
-    return jsonify({"mensagem": "Compra finalizada com sucesso!"})
 
-@app.route("/relatorio_compras", methods=["GET"])
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100))
+    cpf = db.Column(db.String(20))
+    produto = db.Column(db.String(100))
+    preco = db.Column(db.Float)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route("/comprar", methods=["POST"])
+def comprar():
+    dados = request.json
+    nova_compra = Compra(**dados)
+    db.session.add(nova_compra)
+    db.session.commit()
+    return jsonify({"mensagem": "Compra registrada!"})
+
+@app.route("/relatorio_compras")
 def relatorio_compras():
-    compradores = Finalizar.query.all()
-    resultado = []
-    for c in compradores:
-        resultado.append({
-            "Nome_Completo": c.Nome_Completo,
-            "CPF": c.CPF,
-            "Endereço": c.Endereço,
-            "CEP": c.CEP
-        })
-    return jsonify(resultado)
+    compras = Compra.query.order_by(Compra.data.desc()).all()
+    return jsonify([{
+        "nome_completo": c.nome_completo,
+        "cpf": c.cpf,
+        "produto": c.produto,
+        "preco": c.preco,
+        "data": c.data.strftime('%d/%m/%Y %H:%M')
+    } for c in compras])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
