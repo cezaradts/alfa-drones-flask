@@ -91,6 +91,23 @@ def finalizar_compra():
     db.session.commit()
     return redirect(f"/relatorio/{nova.id}")
 
+#rota compras nova
+@app.route("/compras", methods=["GET"])
+def listar_compras():
+    compras = Compra.query.all()
+    resultado = []
+    for c in compras:
+        resultado.append({
+            "id": c.id,
+            "nome_completo": c.nome_completo,
+            "endereco": c.endereco,
+            "cpf": c.cpf,
+            "cep": c.cep,
+            "produtos": json.loads(c.produtos),
+            "valor_total": c.valor_total
+        })
+    return jsonify(resultado)
+
 @app.route("/relatorio/<int:id>")
 def relatorio(id):
     compra = Compra.query.get_or_404(id)
