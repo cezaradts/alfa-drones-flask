@@ -1,7 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+
+analisar a partir da qui para interar
+
+ate aqui
 
 app = Flask(__name__)
 CORS(app)
@@ -21,39 +25,34 @@ class Contato(db.Model):
 
 # Novo modelo para registrar compras
 class Compra(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id_compras = db.Column(db.Integer, primary_key=True)
     nome_completo = db.Column(db.String(100), nullable=False)
-    cpf = db.Column(db.String(20), nullable=False)
-    produto = db.Column(db.String(100), nullable=False)
-    preco = db.Column(db.Float, nullable=False)
-    data = db.Column(db.DateTime, default=datetime.utcnow)
+    endereco = db.Column(db.String(200), nullable=False)
+    cpf = db.Column(db.String(14), nullable=False)
+    cep = db.Column(db.String(9), nullable=False)
+    produtos = db.Column(db.String(500), nullable=False)  # JSON ou lista formatada
+    valor_total = db.Column(db.Float, nullable=False)
+    data_compra = db.Column(db.DateTime, default=datetime.utcnow)
+
+# Criar banco de dados (executar uma vez)
+with app.app_context():
+    db.create_all()
 # ----------------- Novas Rotas para Compras ------------------
 
-@app.route('/comprar', methods=['POST'])
-def comprar():
-    dados = request.json
+@app.route('/finalizar_compra', methods=['POST'])
+def finalizar_compra():
+    dados = request.form
     nova_compra = Compra(
         nome_completo=dados['nome_completo'],
+        endereco=dados['endereco'],
         cpf=dados['cpf'],
-        produto=dados['produto'],
-        preco=dados['preco']
+        cep=dados['cep'],
+        produtos=json.dumps(dados.getlist('produtos')),  # Converte lista de produtos em JSON
+        valor_total=float(dados['total'])
     )
     db.session.add(nova_compra)
     db.session.commit()
-    return jsonify({'mensagem': 'Compra registrada com sucesso!'})
-
-@app.route('/relatorio_compras', methods=['GET'])
-def relatorio_compras():
-    compras = Compra.query.order_by(Compra.data.desc()).all()
-    resultado = [{
-        'nome_completo': c.nome_completo,
-        'cpf': c.cpf,
-        'produto': c.produto,
-        'preco': c.preco,
-        'data': c.data.strftime('%d/%m/%Y %H:%M')
-    } for c in compras]
-    return jsonify(resultado)
-
+    return redirect(url_for('relatorio', id_compra=nova_compra.id))
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
