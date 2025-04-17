@@ -1,3 +1,4 @@
+
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -33,7 +34,7 @@ class Compra(db.Model):
 with app.app_context():
     db.create_all()
 
-# Página com o formulário de finalização
+# PÃ¡gina com o formulÃ¡rio de finalizaÃ§Ã£o
 @app.route('/finalizar_compra', methods=['GET'])
 def mostrar_formulario():
     return render_template('finalizarCompra.html')
@@ -64,7 +65,7 @@ def relatorio(id_compra):
 # Rota principal da API
 @app.route("/")
 def index():
-    return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
+    return jsonify({"mensagem": "API Alfa Drones estÃ¡ funcionando!"})
 
 # Rota para listar todas as compras
 @app.route('/compras')
