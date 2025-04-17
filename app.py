@@ -37,7 +37,7 @@ with app.app_context():
 # PÃ¡gina com o formulÃ¡rio de finalizaÃ§Ã£o
 @app.route('/finalizar_compra', methods=['GET'])
 def mostrar_formulario():
-    return render_template('finalizarCompra.html')
+    return render_template('https://cezaradts.github.io/alfa-drones-flask/templates/finalizarCompra.html')
 
 # Receber os dados da compra
 @app.route('/finalizar_compra', methods=['POST'])
