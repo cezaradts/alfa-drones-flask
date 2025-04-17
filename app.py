@@ -53,21 +53,27 @@ with app.app_context():
     db.create_all()
 # ----------------- Novas Rotas para Compras ------------------
 
-@app.route('/finalizar_compra', methods=['POST'])
+@app.route("/finalizar_compra", methods=["POST"])
 def finalizar_compra():
-    dados = request.form
+    nome_completo = request.form['nome_completo']
+    endereco = request.form['endereco']
+    cpf = request.form['cpf']
+    cep = request.form['cep']
+    produtos = request.form.getlist('produtos')
+    valor_total = len(produtos) * 100  # exemplo: R$100 por item
+
     nova_compra = Compra(
-        nome_completo=dados['nome_completo'],
-        endereco=dados['endereco'],
-        cpf=dados['cpf'],
-        cep=dados['cep'],
-        produtos=json.dumps(dados.getlist('produtos')),  # Converte lista de produtos em JSON
-        valor_total=float(dados['total'])
+        nome_completo=nome_completo,
+        endereco=endereco,
+        cpf=cpf,
+        cep=cep,
+        produtos=json.dumps(produtos),
+        valor_total=valor_total
     )
     db.session.add(nova_compra)
     db.session.commit()
+
     return redirect(url_for('relatorio', id_compra=nova_compra.id))
-    
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 with app.app_context():
