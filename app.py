@@ -69,6 +69,20 @@ def listar_contatos():
             "mensagem": c.mensagem
         })
     return jsonify(resultado)
+# compra sucesso
+@app.route("/compra", methods=["POST"])
+def compra():
+    dados = request.get_json()
+    nome = dados.get("nome_completo")
+    email = dados.get("email_1")
+    telefone = dados.get("telefone_1")
+    mensagem = dados.get("valor_compra")
+
+    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, valor_compra=valor_compra)
+    db.session.add(novo)
+    db.session.commit()
+
+    return jsonify({"mensagem": "Compra enviada com sucesso!"})
 
 @app.route("/finalizar_compra", methods=["POST"])
 def finalizar_compra():
