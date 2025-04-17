@@ -53,6 +53,7 @@ def finalizar_compra():
     db.session.add(nova_compra)
     db.session.commit()
     return redirect(url_for('relatorio', id_compra=nova_compra.id))
+    
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
@@ -63,6 +64,14 @@ def finalizar_compra():
 @app.route("/")
 def index():
     return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
+
+#rota compras
+from flask import render_template
+
+@app.route('/compras')
+def listar_compras():
+    compras = Compra.query.all()  # Pega todas as compras do banco
+    return render_template('compras.html', compras=compras)
 
 # Rota de teste
 @app.route("/test")
