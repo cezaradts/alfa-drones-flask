@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -18,84 +17,183 @@
         </nav>
       </div>
     </header>
+<main>
+    <section>
+      <h2>Status da API:</h2>
+      <div id="resposta" style="font-weight: bold; color: green;">
+        Aguardando resposta da API...
+      </div>
+    </section>
 
-    <main>
-      <form id="form-compra" method="POST" action="/finalizar_compra">
-        <section class="carrinho">
-          <h2>Itens no Carrinho</h2>
-          <ul id="lista-carrinho"></ul>
-          <p id="total"></p>
-        </section>
+    <section class="carrinho">
+      <h2>Itens no Carrinho</h2>
+      <ul id="lista-carrinho"></ul>
+      <p id="total"></p>
+    </section>
 
-        <section class="finalizar">
-          <h2>Finalizar Compra</h2>
+    <script>
+      const listaCarrinho = document.getElementById("lista-carrinho");
+      const totalElement = document.getElementById("total");
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let total = 0;
 
-          <div id="etapa1">
-            <h3>Informações Pessoais</h3>
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome_completo" required />
+      function atualizarCarrinho() {
+        listaCarrinho.innerHTML = ""; // Limpa a lista
+        total = 0; // Reinicia o total
 
-            <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" required />
+        if (carrinho.length === 0) {
+          listaCarrinho.innerHTML = "<li>O carrinho está vazio.</li>";
+          totalElement.textContent = "";
+        } else {
+          carrinho.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${item.modelo} - R$ ${parseFloat(item.preco).toFixed(2).replace(".", ",")}`;
 
-            <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required />
+            // Botão para remover o item
+            const removerButton = document.createElement("button");
+            removerButton.textContent = "Remover";
+            removerButton.style.marginLeft = "10px";
+            removerButton.addEventListener("click", () => {
+              carrinho.splice(index, 1); // Remove o item do array
+              localStorage.setItem("carrinho", JSON.stringify(carrinho)); // Atualiza o localStorage
+              atualizarCarrinho(); // Atualiza a lista
+            });
 
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" required />
+            li.appendChild(removerButton);
+            listaCarrinho.appendChild(li);
+            total += parseFloat(item.preco); // Soma o preço ao total
+          });
 
-            <button type="button" id="btn-avancar">Avançar</button>
-          </div>
+          totalElement.textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
+        }
+      }
 
-          <div id="etapa2" style="display: none">
-            <h3>Escolha o Método de Pagamento</h3>
+      // Inicializa o carrinho ao carregar a página
+      atualizarCarrinho();
+
+    // Adiciona a classe ao botão de limpar carrinho
+    limparCarrinhoButton.className = "limpar-carrinho";
+
+    // Adiciona a classe ao botão de finalizar compra
+    finalizarCompraButton.className = "finalizar-compra";
+
+    // Adiciona funcionalidade para exibir mensagem ao limpar o carrinho
+    limparCarrinhoButton.addEventListener("click", () => {
+      alert("Carrinho limpo com sucesso!");
+      localStorage.removeItem("carrinho");
+      carrinho = [];
+      atualizarCarrinho(); // Atualiza a lista
+      alert("Carrinho limpo com sucesso!"); // Mensagem adicional após limpar
+    });
+  </script>
+</main>
+
+  <footer>
+    <p>&copy; 2025 Alfa Drones</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Verifica se a API está ativa
+    fetch('https://alfa-drones-flask-21.onrender.com/test')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("resposta").innerText = data.mensagem;
+      })
+      .catch(error => {
+        console.error('Erro ao conectar com a API:', error);
+        document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
+        document.getElementById("resposta").style.color = "red";
+      });
+
+   
+  </script>
+</body>
+</html>
+    
+    <section class="finalizar">
+      <h2>Finalizar Compra</h2>
+      <section class="carrinho">
+  
+      <div id="etapa1">
+        <h3>Informações Pessoais</h3>
+        <form id="form-informacoes">
+          <label for="nome">Nome Completo:</label>
+          <input type="text" id="nome" name="nome" required />
+
+          <label for="cpf">CPF:</label>
+          <input type="text" id="cpf" name="cpf" required />
+
+          <label for="endereco">Endereço:</label>
+          <input type="text" id="endereco" name="endereco" required />
+
+          <label for="cep">CEP:</label>
+          <input type="text" id="cep" name="cep" required />
+          
+
+          <button type="button" id="btn-avancar">Avançar</button>
+        </form>
+      </div>
+
+      <div id="etapa2" style="display: none">
+        <h3>Escolha o Método de Pagamento</h3>
+        <form id="form-pagamento">
+          <div>
             <input type="radio" id="credito" name="pagamento" value="credito" required />
-            <label for="credito">Cartão de Crédito</label><br />
+            <label for="credito">Cartão de Crédito</label>
+          </div>
+          <div>
             <input type="radio" id="debito" name="pagamento" value="debito" />
-            <label for="debito">Cartão de Débito</label><br />
+            <label for="debito">Cartão de Débito</label>
+          </div>
+          <div>
             <input type="radio" id="pix" name="pagamento" value="pix" />
-            <label for="pix">PIX</label><br />
+            <label for="pix">PIX</label>
+          </div>
+          <div>
             <input type="radio" id="boleto" name="pagamento" value="boleto" />
-            <label for="boleto">Boleto Bancário</label><br />
-            <button type="button" id="btn-voltar-etapa1">Voltar</button>
-            <button type="button" id="btn-selecionar-pagamento">Avançar</button>
+            <label for="boleto">Boleto Bancário</label>
           </div>
+          <button type="button" id="btn-voltar-etapa1">Voltar</button>
+          <button type="button" id="btn-selecionar-pagamento">Avançar</button>
+        </form>
+      </div>
 
-          <div id="etapa3" style="display: none">
-            <h3>Pagamento</h3>
-            <div id="detalhes-cartao" style="display: none">
-              <label for="numero-cartao">Número do Cartão:</label>
-              <input type="text" id="numero-cartao" /><br />
-              <label for="nome-cartao">Nome no Cartão:</label>
-              <input type="text" id="nome-cartao" /><br />
-              <label for="validade-cartao">Validade:</label>
-              <input type="text" id="validade-cartao" /><br />
-              <label for="cvv-cartao">CVV:</label>
-              <input type="text" id="cvv-cartao" /><br />
-            </div>
+      <div id="etapa3" style="display: none">
+        <h3>Detalhes do Pagamento</h3>
+        <div id="detalhes-cartao" style="display: none">
+          <form id="form-cartao">
+            <label for="numero-cartao">Número do Cartão:</label>
+            <input type="text" id="numero-cartao" name="numero-cartao" required />
 
-            <div id="detalhes-pix" style="display: none">
-              <p>Use o QR Code abaixo para pagar:</p>
-              <img src="images/qrcode-ficticio.png" alt="QR Code PIX" />
-            </div>
+            <label for="nome-cartao">Nome no Cartão:</label>
+            <input type="text" id="nome-cartao" name="nome-cartao" required />
 
-            <div id="detalhes-boleto" style="display: none">
-              <p>Clique no botão abaixo para gerar o boleto:</p>
-              <button id="btn-gerar-boleto" type="button">Gerar Boleto</button>
-            </div>
+            <label for="validade-cartao">Validade:</label>
+            <input type="text" id="validade-cartao" name="validade-cartao" required />
 
-            <input type="hidden" name="produtos" id="produtos-escondidos" />
-            <input type="hidden" name="valor_total" id="valor_total" />
+            <label for="cvv-cartao">CVV:</label>
+            <input type="text" id="cvv-cartao" name="cvv-cartao" required />
+          </form>
+        </div>
 
-            <button type="button" id="btn-voltar-etapa2">Voltar</button>
-            <button type="button" id="btn-finalizar-compra">Finalizar Compra</button>
-          </div>
-        </section>
-      </form>
-    </main>
+        <div id="detalhes-pix" style="display: none">
+          <p>Use o QR Code abaixo para realizar o pagamento:</p>
+          <img src="images/qrcode-ficticio.png" alt="QR Code PIX" />
+        </div>
+
+        <div id="detalhes-boleto" style="display: none">
+          <p>Clique no botão abaixo para gerar o boleto bancário:</p>
+          <button id="btn-gerar-boleto">Gerar Boleto</button>
+        </div>
+
+        <button type="button" id="btn-voltar-etapa2">Voltar</button>
+        <button id="btn-finalizar-compra">Finalizar Compra</button>
+      </div>
+    </section>
 
     <footer>
-      <p>&copy; 2025 Alfa Drones</p>
+      <p>© 2025 Alfa Drones. Todos os direitos reservados.</p>
     </footer>
 
     <script>
@@ -104,50 +202,30 @@
       const etapa3 = document.getElementById("etapa3");
       const btnAvancar = document.getElementById("btn-avancar");
       const btnSelecionarPagamento = document.getElementById("btn-selecionar-pagamento");
+      const btnFinalizarCompra = document.getElementById("btn-finalizar-compra");
       const btnVoltarEtapa1 = document.getElementById("btn-voltar-etapa1");
       const btnVoltarEtapa2 = document.getElementById("btn-voltar-etapa2");
-      const btnFinalizarCompra = document.getElementById("btn-finalizar-compra");
       const detalhesCartao = document.getElementById("detalhes-cartao");
       const detalhesPix = document.getElementById("detalhes-pix");
       const detalhesBoleto = document.getElementById("detalhes-boleto");
+      const btnGerarBoleto = document.getElementById("btn-gerar-boleto");
 
-      const listaCarrinho = document.getElementById("lista-carrinho");
-      const totalElement = document.getElementById("total");
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      let total = 0;
-
-      function atualizarCarrinho() {
-        listaCarrinho.innerHTML = "";
-        total = 0;
-
-        if (carrinho.length === 0) {
-          listaCarrinho.innerHTML = "<li>O carrinho está vazio.</li>";
-        } else {
-          carrinho.forEach((item, index) => {
-            const li = document.createElement("li");
-            li.textContent = `${item.modelo} - R$ ${parseFloat(item.preco).toFixed(2).replace(".", ",")}`;
-            listaCarrinho.appendChild(li);
-            total += parseFloat(item.preco);
-          });
-        }
-
-        totalElement.textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
-      }
-
-      atualizarCarrinho();
-
+      // Avançar para a etapa 2
       btnAvancar.addEventListener("click", () => {
         etapa1.style.display = "none";
         etapa2.style.display = "block";
       });
 
+      // Voltar para a etapa 1
       btnVoltarEtapa1.addEventListener("click", () => {
         etapa2.style.display = "none";
         etapa1.style.display = "block";
       });
 
+      // Avançar para a etapa 3
       btnSelecionarPagamento.addEventListener("click", () => {
         const metodoPagamento = document.querySelector('input[name="pagamento"]:checked').value;
+
         etapa2.style.display = "none";
         etapa3.style.display = "block";
 
@@ -160,6 +238,7 @@
         }
       });
 
+      // Voltar para a etapa 2
       btnVoltarEtapa2.addEventListener("click", () => {
         etapa3.style.display = "none";
         etapa2.style.display = "block";
@@ -168,17 +247,18 @@
         detalhesBoleto.style.display = "none";
       });
 
-      document.getElementById("btn-gerar-boleto").addEventListener("click", () => {
+      // Gerar boleto fictício
+      btnGerarBoleto.addEventListener("click", () => {
         alert("Boleto gerado com sucesso!");
       });
 
+      // Finalizar compra
       btnFinalizarCompra.addEventListener("click", () => {
-        const produtos = carrinho.map(item => `${item.modelo} - R$ ${item.preco}`);
-        document.getElementById("produtos-escondidos").value = JSON.stringify(produtos);
-        document.getElementById("valor_total").value = total.toFixed(2);
-        localStorage.removeItem("carrinho");
-        document.getElementById("form-compra").submit();
+        alert("Compra finalizada com sucesso! Obrigado por comprar na Alfa Drones.");
+        localStorage.removeItem("carrinho"); // Limpa o carrinho
+        window.location.href = "https://cezaradts.github.io/alfa-drones/index.html"; // Redireciona para a página inical
       });
+      
     </script>
   </body>
 </html>
