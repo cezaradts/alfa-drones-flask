@@ -1,12 +1,21 @@
-<table>
-    <tr>
-        <th>Comprador</th>
-        <th>Produto</th>
-    </tr>
-    {% for comprador, produto in relatorio %}
-    <tr>
-        <td>{{ comprador }}</td>
-        <td>{{ produto }}</td>
-    </tr>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Compra</title>
+</head>
+<body>
+  <h1>Relatório de Compra</h1>
+  <p><strong>Nome:</strong> {{ compra.nome_completo }}</p>
+  <p><strong>Endereço:</strong> {{ compra.endereco }}</p>
+  <p><strong>CPF:</strong> {{ compra.cpf }}</p>
+  <p><strong>CEP:</strong> {{ compra.cep }}</p>
+  <p><strong>Valor Total:</strong> R$ {{ compra.valor_total }}</p>
+  <h3>Produtos:</h3>
+  <ul>
+    {% for item in produtos %}
+      <li>{{ item }}</li>
     {% endfor %}
-</table>
+  </ul>
+</body>
+</html>
