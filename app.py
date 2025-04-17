@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import json
+from datetime import datetime
 import os
 
 analisar a partir da qui para interar
@@ -85,6 +87,15 @@ def listar_compras():
     compras = Compra.query.all()  # Pega todas as compras do banco
     return render_template('compras.html', compras=compras)
 
+
+# rota de compra especifica
+
+@app.route("/relatorio/<int:id_compra>")
+def relatorio(id_compra):
+    compra = Compra.query.get_or_404(id_compra)
+    produtos = json.loads(compra.produtos)
+    return render_template("relatorio.html", compra=compra, produtos=produtos)
+    
 # Rota de teste
 @app.route("/test")
 def test():
