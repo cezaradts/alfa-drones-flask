@@ -1,6 +1,8 @@
-<td>${contato.mensagem}</td>from flask import Flask, jsonify, request
+
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import datetime
 import os
 
 app = Flask(__name__)
@@ -18,10 +20,14 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
+
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     nome_completo = db.Column(db.String(100))
     cpf = db.Column(db.String(20))
-    endereco = db.Column(db.String(20))
-    cep = db.Column(db.String(20))
+    produto = db.Column(db.String(100))
+    preco = db.Column(db.Float)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
@@ -46,10 +52,7 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
-    nome_completo= dados.get("nome_completo")
-    cpf = dados.get("cpf")
-    endereco = dados.get("endereco")
-    cep = dados.get("CEP")
+    
 
     novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereco=endereco, CEP=CEP)
     db.session.add(novo)
@@ -76,33 +79,34 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
-class Compra(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome_completo = db.Column(db.String(100))
-    cpf = db.Column(db.String(20))
-    produto = db.Column(db.String(100))
-    preco = db.Column(db.Float)
-    data = db.Column(db.DateTime, default=datetime.utcnow)
-
-@app.route("/comprar", methods=["POST"])
+@app.route('/comprar', methods=['POST'])
 def comprar():
     dados = request.json
-    nova_compra = Compra(**dados)
+    nova_compra = Compra(
+        nome_completo=dados['nome_completo'],
+        cpf=dados['cpf'],
+        produto=dados['produto'],
+        preco=dados['preco']
+    )
     db.session.add(nova_compra)
     db.session.commit()
-    return jsonify({"mensagem": "Compra registrada!"})
+    return jsonify({'mensagem': 'Compra registrada com sucesso!'})
 
-@app.route("/relatorio_compras")
+
+@app.route('/relatorio_compras', methods=['GET'])
 def relatorio_compras():
     compras = Compra.query.order_by(Compra.data.desc()).all()
-    return jsonify([{
-        "nome_completo": c.nome_completo,
-        "cpf": c.cpf,
-        "produto": c.produto,
-        "preco": c.preco,
-        "data": c.data.strftime('%d/%m/%Y %H:%M')
-    } for c in compras])
-
+    resultado = [{
+        'nome_completo': c.nome_completo,
+        'cpf': c.cpf,
+        'produto': c.produto,
+        'preco': c.preco,
+        'data': c.data.strftime('%d/%m/%Y %H:%M')
+    } for c in compras]
+    return jsonify(resultado)
+    
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True)
