@@ -75,7 +75,32 @@ def listar_contatos():
             "cep": c.cep
         })
     return jsonify(resultado)
+@app.route("/finalizar", methods=["POST"])
+def finalizar():
+    dados = request.get_json()
+    nome = dados.get("Nome_Completo")
+    cpf = dados.get("CPF")
+    endereco = dados.get("Endereço")
+    cep = dados.get("CEP")
+    
+    novo = Finalizar(Nome_Completo=nome, CPF=cpf, Endereço=endereco, CEP=cep)
+    db.session.add(novo)
+    db.session.commit()
+    
+    return jsonify({"mensagem": "Compra finalizada com sucesso!"})
 
+@app.route("/relatorio_compras", methods=["GET"])
+def relatorio_compras():
+    compradores = Finalizar.query.all()
+    resultado = []
+    for c in compradores:
+        resultado.append({
+            "Nome_Completo": c.Nome_Completo,
+            "CPF": c.CPF,
+            "Endereço": c.Endereço,
+            "CEP": c.CEP
+        })
+    return jsonify(resultado)
 
 if __name__ == "__main__":
     app.run(debug=True)
