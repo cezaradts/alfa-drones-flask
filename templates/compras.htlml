@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Compras</title>
+</head>
+<body>
+    <h1>Compras Registradas</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Valor Total</th>
+            <th>Data</th>
+            <th>Ações</th>
+        </tr>
+        {% for compra in compras %}
+        <tr>
+            <td>{{ compra.id }}</td>
+            <td>{{ compra.nome_completo }}</td>
+            <td>{{ compra.cpf }}</td>
+            <td>R$ {{ "%.2f"|format(compra.valor_total) }}</td>
+            <td>{{ compra.data_compra.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>
+                <a href="/relatorio/{{ compra.id }}">Gerar PDF</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
