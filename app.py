@@ -1,4 +1,4 @@
-<td>${contato.mensagem}</td>from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -11,17 +11,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Banco de dados para contato
+# Modelo
 class Contato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100))
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
-    nome_completo = db.Column(db.String(100))
-    cpf = db.Column(db.String(20))
-    endereco = db.Column(db.String(20))
-    cep = db.Column(db.String(20))
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
@@ -31,12 +27,12 @@ class Contato(db.Model):
 # Rota principal
 @app.route("/")
 def index():
-    return jsonify({"mensagem": "API Alfa Drones Contato esta funcionando!"})
+    return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
 
 # Rota de teste
 @app.route("/test")
 def test():
-    return jsonify({"status": "OK", "mensagem": "Rota de teste Contato funcionando perfeitamente!"})
+    return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando perfeitamente!"})
 
 # Rota de contato
 @app.route("/contato", methods=["POST"])
@@ -46,12 +42,8 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
-    nome_completo= dados.get("nome_completo")
-    cpf = dados.get("cpf")
-    endereco = dados.get("endereco")
-    cep = dados.get("CEP")
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereco=endereco, CEP=CEP)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
     db.session.add(novo)
     db.session.commit()
 
@@ -69,40 +61,8 @@ def listar_contatos():
             "email": c.email,
             "telefone": c.telefone,
             "mensagem": c.mensagem
-             "nome_completo": c.nome_completo,
-            "cpf": c.cpf,
-            "endereco": c.endereco,
-            "cep": c.cep
         })
     return jsonify(resultado)
-
-class Compra(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome_completo = db.Column(db.String(100))
-    cpf = db.Column(db.String(20))
-    produto = db.Column(db.String(100))
-    preco = db.Column(db.Float)
-    data = db.Column(db.DateTime, default=datetime.utcnow)
-
-@app.route("/comprar", methods=["POST"])
-def comprar():
-    dados = request.json
-    nova_compra = Compra(**dados)
-    db.session.add(nova_compra)
-    db.session.commit()
-    return jsonify({"mensagem": "Compra registrada!"})
-
-@app.route("/relatorio_compras")
-def relatorio_compras():
-    compras = Compra.query.order_by(Compra.data.desc()).all()
-    return jsonify([{
-        "nome_completo": c.nome_completo,
-        "cpf": c.cpf,
-        "produto": c.produto,
-        "preco": c.preco,
-        "data": c.data.strftime('%d/%m/%Y %H:%M')
-    } for c in compras])
-
 
 if __name__ == "__main__":
     app.run(debug=True)
