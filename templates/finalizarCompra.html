@@ -188,7 +188,8 @@
         </div>
 
         <button type="button" id="btn-voltar-etapa2">Voltar</button>
-        <button id="btn-finalizar-compra">Finalizar Compra</button>
+        <form id="form-informacoes" method="POST" action="/finalizar_compra">
+          <button type="button" onclick="enviarCompra()">Finalizar Compra</button>
       </div>
     </section>
 
@@ -209,6 +210,10 @@
       const detalhesPix = document.getElementById("detalhes-pix");
       const detalhesBoleto = document.getElementById("detalhes-boleto");
       const btnGerarBoleto = document.getElementById("btn-gerar-boleto");
+      function enviarCompra() {
+  document.getElementById("form-informacoes").submit();
+  localStorage.removeItem("carrinho");
+}
 
       // Avançar para a etapa 2
       btnAvancar.addEventListener("click", () => {
