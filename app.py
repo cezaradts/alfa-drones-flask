@@ -19,6 +19,42 @@ class Contato(db.Model):
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
 
+# Novo modelo para registrar compras
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100), nullable=False)
+    cpf = db.Column(db.String(20), nullable=False)
+    produto = db.Column(db.String(100), nullable=False)
+    preco = db.Column(db.Float, nullable=False)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
+# ----------------- Novas Rotas para Compras ------------------
+
+@app.route('/comprar', methods=['POST'])
+def comprar():
+    dados = request.json
+    nova_compra = Compra(
+        nome_completo=dados['nome_completo'],
+        cpf=dados['cpf'],
+        produto=dados['produto'],
+        preco=dados['preco']
+    )
+    db.session.add(nova_compra)
+    db.session.commit()
+    return jsonify({'mensagem': 'Compra registrada com sucesso!'})
+
+@app.route('/relatorio_compras', methods=['GET'])
+def relatorio_compras():
+    compras = Compra.query.order_by(Compra.data.desc()).all()
+    resultado = [{
+        'nome_completo': c.nome_completo,
+        'cpf': c.cpf,
+        'produto': c.produto,
+        'preco': c.preco,
+        'data': c.data.strftime('%d/%m/%Y %H:%M')
+    } for c in compras]
+    return jsonify(resultado)
+
+
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 #with app.app_context():
  #  db.drop_all()
