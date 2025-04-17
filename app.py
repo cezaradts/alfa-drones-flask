@@ -33,6 +33,18 @@ class Compra(db.Model):
     produtos = db.Column(db.String(500), nullable=False)  # JSON ou lista formatada
     valor_total = db.Column(db.Float, nullable=False)
     data_compra = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    #nova classe produto
+class Produto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100))
+    preco = db.Column(db.Float)
+
+class Pedido(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    contato_id = db.Column(db.Integer, db.ForeignKey('contato.id'))
+    produtos = db.relationship('Produto', secondary='pedido_produto', backref='pedidos')
+    valor_total = db.Column(db.Float)
 
 # Criar banco de dados (executar uma vez)
 with app.app_context():
@@ -56,9 +68,9 @@ def finalizar_compra():
     
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
-#with app.app_context():
- #  db.drop_all()
- #  db.create_all()
+with app.app_context():
+   db.drop_all()
+   db.create_all()
 
 # Rota principal
 @app.route("/")
@@ -92,6 +104,24 @@ def contato():
     db.session.commit()
 
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
+
+#que  relatorio compras
+@app.route("/relatorio_compras", methods=["GET"])
+def relatorio_compras():
+    pedidos = Pedido.query.all()
+    relatorio = []
+    for pedido in pedidos:
+        contato = Contato.query.get(pedido.contato_id)
+        produtos = [{'nome': p.nome, 'preco': p.preco} for p in pedido.produtos]
+        relatorio.append({
+            'nome_completo': contato.nome_completo,
+            'endereco': contato.endereco,
+            'cpf': contato.cpf,
+            'cep': contato.cep,
+            'produtos': produtos,
+            'valor_total': pedido.valor_total
+        })
+    return jsonify(relatorio)
 
 # Rota para ler dados do contato
 @app.route("/contatos", methods=["GET"])
