@@ -1,7 +1,9 @@
-from flask import Flask, jsonify, request
+
+from flask import Flask, jsonify, request, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -11,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Banco de dados para contato
+# Modelo para contatos
 class Contato(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100))
@@ -19,7 +21,7 @@ class Contato(db.Model):
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
 
-# Banco de dados para compras novo
+# Modelo para compras
 class Compra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome_completo = db.Column(db.String(100), nullable=False)
@@ -29,24 +31,17 @@ class Compra(db.Model):
     produtos = db.Column(db.String(500), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
 
+with app.app_context():
+    db.create_all()
 
-
-#zerar lista de contatos (tirar # da frente das 3 proximas linhas)
-# with app.app_context():
- # db.drop_all()
-#  db.create_all()
-
-# Rota principal
 @app.route("/")
 def index():
-    return jsonify({"mensagem": "API Alfa Drones Contato esta funcionando!"})
+    return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
 
-# Rota de teste
 @app.route("/test")
 def test():
-    return jsonify({"status": "OK", "mensagem": "Rota de teste Contato funcionando perfeitamente!"})
+    return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando perfeitamente!"})
 
-# Rota de contato
 @app.route("/contato", methods=["POST"])
 def contato():
     dados = request.get_json()
@@ -54,15 +49,13 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
-    
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
+    novo = Contato(nome=nome, email=email, telefone=telefone, mensagem=mensagem)
     db.session.add(novo)
     db.session.commit()
 
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
 
-# Rota para ler dados do contato
 @app.route("/contatos", methods=["GET"])
 def listar_contatos():
     contatos = Contato.query.all()
@@ -77,14 +70,13 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
-# Rota de Compras nova
 @app.route("/finalizar_compra", methods=["POST"])
 def finalizar_compra():
-    nome = request.form["nome_completo"]
-    endereco = request.form["endereco"]
-    cpf = request.form["cpf"]
-    cep = request.form["cep"]
-    produtos = request.form.get("produtos")  # Deve ser um JSON.stringify no HTML
+    nome = request.form.get("nome_completo")
+    endereco = request.form.get("endereco")
+    cpf = request.form.get("cpf")
+    cep = request.form.get("cep")
+    produtos = request.form.get("produtos")
     valor_total = float(request.form.get("valor_total"))
 
     nova = Compra(
@@ -99,16 +91,9 @@ def finalizar_compra():
     db.session.commit()
     return redirect(f"/relatorio/{nova.id}")
 
-# Rota exibir relatorio Nova
-
-from flask import render_template
-
 @app.route("/relatorio/<int:id>")
 def relatorio(id):
     compra = Compra.query.get_or_404(id)
     produtos = json.loads(compra.produtos)
     return render_template("relatorio.html", compra=compra, produtos=produtos)
-    
-if __name__ == "__main__":
-    app.run(debug=True)
-    app.run(debug=True)
+
