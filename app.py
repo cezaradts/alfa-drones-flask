@@ -78,7 +78,7 @@ def compra():
     telefone = dados.get("telefone_1")
     mensagem = dados.get("valor_compra")
 
-    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, valor_compra=valor_compra)
+    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, mensagem=mensagem, valor_compra=valor_compra)
     db.session.add(novo)
     db.session.commit()
 
