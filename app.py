@@ -18,15 +18,12 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
-    nome_completo = db.Column(db.String(100))
-    cpf = db.Column(db.String(20))
-    endereco = db.Column(db.String(20))
-    cep = db.Column(db.String(20))
+   
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
-#with app.app_context():
- #  db.drop_all()
- #  db.create_all()
+with app.app_context():
+  db.drop_all()
+  db.create_all()
 
 # Rota principal
 @app.route("/")
@@ -46,12 +43,9 @@ def contato():
     email = dados.get("email")
     telefone = dados.get("telefone")
     mensagem = dados.get("mensagem")
-    nome_completo= dados.get("nome_completo")
-    cpf = dados.get("cpf")
-    endereco = dados.get("endereco")
-    cep = dados.get("CEP")
+    
 
-    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem, nome_completo=nome_completo, cpf=cpf, endereco=endereco, CEP=CEP)
+    novo = Contato(nome=nome, email=email,telefone=telefone, mensagem=mensagem)
     db.session.add(novo)
     db.session.commit()
 
@@ -69,10 +63,6 @@ def listar_contatos():
             "email": c.email,
             "telefone": c.telefone,
             "mensagem": c.mensagem
-             "nome_completo": c.nome_completo,
-            "cpf": c.cpf,
-            "endereco": c.endereco,
-            "cep": c.cep
         })
     return jsonify(resultado)
 
