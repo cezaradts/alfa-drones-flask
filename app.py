@@ -6,8 +6,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Configuração do Banco de Dados (use a variável do Render ou sua URI atual)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///alfa_drones.db'
+# Configuração do banco de dados
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
