@@ -29,7 +29,7 @@
 
     <section>
       <h2>Seu Pedido</h2>
-      <form id="form-compra">
+      <form id="form-contato">
         <label for="nome_completo">Nome Completo:</label><br>
         <input type="text" id="nome_completo" name="nome_completo" required /><br><br>
 
@@ -67,7 +67,7 @@
       });
 
     // Envia o formulário de compras
-    document.getElementById("form-compra").addEventListener("submit", function (e) {
+    document.getElementById("form-contato").addEventListener("submit", function (e) {
       e.preventDefault();
 
       const nome = document.getElementById("nome_completo").value;
@@ -85,7 +85,7 @@
       .then(res => res.json())
       .then(data => {
   document.getElementById("mensagem-resultado").innerText = data.mensagem;
-  document.getElementById("form-compra").reset();
+  document.getElementById("form-contato").reset();
   // Redireciona para a página inicial após envio
   setTimeout(() => {
     window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
