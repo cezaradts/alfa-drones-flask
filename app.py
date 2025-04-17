@@ -18,7 +18,18 @@ class Contato(db.Model):
     email = db.Column(db.String(100))
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
-   
+
+# Banco de dados para compras novo
+class Compra(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_completo = db.Column(db.String(100), nullable=False)
+    endereco = db.Column(db.String(200), nullable=False)
+    cpf = db.Column(db.String(14), nullable=False)
+    cep = db.Column(db.String(9), nullable=False)
+    produtos = db.Column(db.String(500), nullable=False)
+    valor_total = db.Column(db.Float, nullable=False)
+
+
 
 #zerar lista de contatos (tirar # da frente das 3 proximas linhas)
 # with app.app_context():
@@ -66,7 +77,38 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
+# Rota de Compras nova
+@app.route("/finalizar_compra", methods=["POST"])
+def finalizar_compra():
+    nome = request.form["nome_completo"]
+    endereco = request.form["endereco"]
+    cpf = request.form["cpf"]
+    cep = request.form["cep"]
+    produtos = request.form.get("produtos")  # Deve ser um JSON.stringify no HTML
+    valor_total = float(request.form.get("valor_total"))
 
+    nova = Compra(
+        nome_completo=nome,
+        endereco=endereco,
+        cpf=cpf,
+        cep=cep,
+        produtos=produtos,
+        valor_total=valor_total
+    )
+    db.session.add(nova)
+    db.session.commit()
+    return redirect(f"/relatorio/{nova.id}")
+
+# Rota exibir relatorio Nova
+
+from flask import render_template
+
+@app.route("/relatorio/<int:id>")
+def relatorio(id):
+    compra = Compra.query.get_or_404(id)
+    produtos = json.loads(compra.produtos)
+    return render_template("relatorio.html", compra=compra, produtos=produtos)
+    
 if __name__ == "__main__":
     app.run(debug=True)
     app.run(debug=True)
