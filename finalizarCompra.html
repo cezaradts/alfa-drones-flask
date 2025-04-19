@@ -159,6 +159,18 @@
         </form>
       </div>
 
+        //parte nova htlm
+
+        <form id="form-compra">
+  <input type="text" name="nome" placeholder="Nome completo" required />
+  <input type="text" name="endereco" placeholder="Endereço completo" required />
+  <input type="text" name="cep" placeholder="CEP" required />
+  <input type="hidden" name="valor_total" id="valorTotal" />
+  <button type="submit">Finalizar Compra</button>
+</form>
+
+        //final parte nova
+
       <div id="etapa3" style="display: none">
         <h3>Detalhes do Pagamento</h3>
         <div id="detalhes-cartao" style="display: none">
@@ -209,6 +221,28 @@
       const detalhesPix = document.getElementById("detalhes-pix");
       const detalhesBoleto = document.getElementById("detalhes-boleto");
       const btnGerarBoleto = document.getElementById("btn-gerar-boleto");
+
+      //parte nova
+
+      document.getElementById("form-compra").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData.entries());
+
+  const response = await fetch("https://alfa-drones-flask-21.onrender.com/compras", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  if (response.ok) {
+    alert("Compra finalizada!");
+  } else {
+    alert("Erro ao registrar compra.");
+  }
+});
+
+      //termnina parte nova
 
       // Avançar para a etapa 2
       btnAvancar.addEventListener("click", () => {
