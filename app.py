@@ -21,16 +21,15 @@ class Contato(db.Model):
     telefone = db.Column(db.String(20))
     mensagem = db.Column(db.Text)
 
-# Modelo para compras
+# Modelo para compras parte nova
 class Compra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome_completo = db.Column(db.String(100), nullable=False)
-    endereco = db.Column(db.String(200), nullable=False)
-    cpf = db.Column(db.String(14), nullable=False)
-    cep = db.Column(db.String(9), nullable=False)
-    produtos = db.Column(db.String(500), nullable=False)
-    valor_total = db.Column(db.Float, nullable=False)
+    nome = db.Column(db.String(100))
+    endereco = db.Column(db.String(200))
+    cep = db.Column(db.String(20))
+    valor_total = db.Column(db.Float)
 
+// final parte nova
 with app.app_context():
     db.create_all()
 
@@ -69,20 +68,22 @@ def listar_contatos():
             "mensagem": c.mensagem
         })
     return jsonify(resultado)
-# compra sucesso
-@app.route("/compra", methods=["POST"])
-def compra():
-    dados = request.get_json()
-    nome = dados.get("nome_completo")
-    email = dados.get("email_1")
-    telefone = dados.get("telefone_1")
-    mensagem = dados.get("valor_compra")
-
-    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, mensagem=mensagem, valor_compra=valor_compra)
-    db.session.add(novo)
+    
+# compra sucesso nova
+@app.route('/compras', methods=['POST'])
+def salvar_compra():
+    data = request.get_json()
+    nova_compra = Compra(
+        nome=data['nome'],
+        endereco=data['endereco'],
+        cep=data['cep'],
+        valor_total=data['valor_total']
+    )
+    db.session.add(nova_compra)
     db.session.commit()
+    return jsonify({'mensagem': 'Compra registrada com sucesso'}), 201
 
-    return jsonify({"mensagem": "Compra enviada com sucesso!"})
+//final parte nova
 
 @app.route("/finalizar_compra", methods=["POST"])
 def finalizar_compra():
@@ -122,9 +123,20 @@ def listar_compras():
         })
     return jsonify(resultado)
 
-@app.route("/relatorio/<int:id>")
-def relatorio(id):
-    compra = Compra.query.get_or_404(id)
-    produtos = json.loads(compra.produtos)
-    return render_template("relatorio.html", compra=compra, produtos=produtos)
+// nova rota relatorio compras
 
+@app.route('/relatorio_compras')
+def relatorio_compras():
+    compras = Compra.query.all()
+    relatorio = [
+        {
+            'nome': c.nome,
+            'endereco': c.endereco,
+            'cep': c.cep,
+            'valor_total': c.valor_total
+        }
+        for c in compras
+    ]
+    return jsonify(relatorio)
+
+//final relatorio
