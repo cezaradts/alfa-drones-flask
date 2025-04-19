@@ -24,12 +24,12 @@ class Contato(db.Model):
 # Modelo para compras parte nova
 class Compra(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100))
-    endereco = db.Column(db.String(200))
-    cep = db.Column(db.String(20))
-    valor_total = db.Column(db.Float)
-
+    nome = db.Column(db.String(100), nullable=False)
+    endereco = db.Column(db.String(200), nullable=False)
+    cep = db.Column(db.String(20), nullable=False)
+    valor_total = db.Column(db.Float, nullable=False)
 // final parte nova
+
 with app.app_context():
     db.create_all()
 
@@ -77,12 +77,11 @@ def salvar_compra():
         nome=data['nome'],
         endereco=data['endereco'],
         cep=data['cep'],
-        valor_total=data['valor_total']
+        valor_total=float(data['valor_total'])
     )
     db.session.add(nova_compra)
     db.session.commit()
     return jsonify({'mensagem': 'Compra registrada com sucesso'}), 201
-
 //final parte nova
 
 @app.route("/finalizar_compra", methods=["POST"])
@@ -125,7 +124,7 @@ def listar_compras():
 
 // nova rota relatorio compras
 
-@app.route('/relatorio_compras')
+@app.route('/relatorio_compras', methods=['GET'])
 def relatorio_compras():
     compras = Compra.query.all()
     relatorio = [
@@ -138,5 +137,8 @@ def relatorio_compras():
         for c in compras
     ]
     return jsonify(relatorio)
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 //final relatorio
