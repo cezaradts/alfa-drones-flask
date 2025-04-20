@@ -27,8 +27,8 @@ class Compra(db.Model):
     endereco = db.Column(db.String(200), nullable=False)
     cpf = db.Column(db.String(14), nullable=False)
     cep = db.Column(db.String(9), nullable=False)
-    produtos = db.Column(db.String(500), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
+    forma_pagamento = db.Column(db.String(50), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -68,43 +68,27 @@ def listar_contatos():
             "mensagem": c.mensagem
         })
     return jsonify(resultado)
-# compra sucesso
-@app.route("/compra", methods=["POST"])
-def compra():
+
+# Rota POST de compra com dados enviados por JSON
+@app.route("/compras", methods=["POST"])
+def registrar_compra():
     dados = request.get_json()
-    nome = dados.get("nome_completo")
-    email = dados.get("email_1")
-    telefone = dados.get("telefone_1")
-    mensagem = dados.get("valor_compra")
+    try:
+        nova = Compra(
+            nome_completo=dados.get("nome"),
+            endereco=dados.get("endereco"),
+            cpf=dados.get("cpf"),
+            cep=dados.get("cep"),
+            valor_total=dados.get("valor_total"),
+            forma_pagamento=dados.get("forma_pagamento")
+        )
+        db.session.add(nova)
+        db.session.commit()
+        return jsonify({"mensagem": "Compra registrada com sucesso!", "id": nova.id}), 201
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 400
 
-    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, mensagem=mensagem, valor_compra=valor_compra)
-    db.session.add(novo)
-    db.session.commit()
-
-    return jsonify({"mensagem": "Compra enviada com sucesso!"})
-
-@app.route("/finalizar_compra", methods=["POST"])
-def finalizar_compra():
-    nome = request.form.get("nome_completo")
-    endereco = request.form.get("endereco")
-    cpf = request.form.get("cpf")
-    cep = request.form.get("cep")
-    produtos = request.form.get("produtos")
-    valor_total = float(request.form.get("valor_total"))
-
-    nova = Compra(
-        nome_completo=nome,
-        endereco=endereco,
-        cpf=cpf,
-        cep=cep,
-        produtos=produtos,
-        valor_total=valor_total
-    )
-    db.session.add(nova)
-    db.session.commit()
-    return redirect(f"/relatorio/{nova.id}")
-
-#rota compras nova
+# Rota GET para listar todas as compras
 @app.route("/compras", methods=["GET"])
 def listar_compras():
     compras = Compra.query.all()
@@ -116,13 +100,13 @@ def listar_compras():
             "endereco": c.endereco,
             "cpf": c.cpf,
             "cep": c.cep,
-            "produtos": json.loads(c.produtos),
-            "valor_total": c.valor_total
+            "valor_total": c.valor_total,
+            "forma_pagamento": c.forma_pagamento
         })
     return jsonify(resultado)
 
+# Rota para exibir relatório de uma compra
 @app.route("/relatorio/<int:id>")
 def relatorio(id):
     compra = Compra.query.get_or_404(id)
-    produtos = json.loads(compra.produtos)
-    return render_template("relatorio.html", compra=compra, produtos=produtos)
+    return render_template("relatorio.html", compra=compra)
