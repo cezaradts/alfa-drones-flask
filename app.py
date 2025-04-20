@@ -104,11 +104,6 @@ def listar_compras():
             "forma_pagamento": c.forma_pagamento
         })
     return jsonify(resultado)
-#rota relatorio de compras
-@app.route("/relatorio-compras")
-def relatorio_compras():
-    compras = Compra.query.all()
-    return render_template("relatorio_todas_compras.html", compras=compras)
 
 # Rota para exibir relatório de uma compra
 @app.route("/relatorio/<int:id>")
