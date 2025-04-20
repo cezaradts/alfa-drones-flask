@@ -174,7 +174,7 @@
         body: JSON.stringify(dadosCompra)
       });
 
-    if (resposta.ok) {
+  if (resposta.ok) {
   const resultado = await resposta.json();
   const idCompra = resultado.id;
   alert("Compra finalizada com sucesso!");
