@@ -1,31 +1,29 @@
-<table id="tabelaCompras" border="1">
-  <thead>
-    <tr>
-      <th>Nome</th><th>CPF</th><th>Endereço</th><th>CEP</th><th>Valor Total</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
 
-<script>
-  async function carregarCompras() {
-    const resposta = await fetch('https://alfa-drones-flask-21.onrender.com/relatorio-compras');
-    const compras = await resposta.json();
-
-    const tabela = document.querySelector('#tabelaCompras tbody');
-    compras.forEach(c => {
-      const linha = `
-        <tr>
-          <td>${c.nome}</td>
-          <td>${c.cpf}</td>
-          <td>${c.endereco}</td>
-          <td>${c.cep}</td>
-          <td>R$ ${c.valor_total.toFixed(2)}</td>
-        </tr>
-      `;
-      tabela.innerHTML += linha;
-    });
-  }
-
-  carregarCompras();
-</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Compra</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .dados-compra { margin-top: 20px; }
+    .dados-compra p { margin: 5px 0; }
+    .container { max-width: 700px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    .titulo { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="titulo">Relatório da Compra</h1>
+    <div class="dados-compra">
+      <p><strong>Nome:</strong> {{ compra.nome_completo }}</p>
+      <p><strong>CPF:</strong> {{ compra.cpf }}</p>
+      <p><strong>Endereço:</strong> {{ compra.endereco }}</p>
+      <p><strong>CEP:</strong> {{ compra.cep }}</p>
+      <p><strong>Forma de Pagamento:</strong> {{ compra.forma_pagamento }}</p>
+      <p><strong>Valor Total:</strong> R$ {{ '%.2f' % compra.valor_total }}</p>
+    </div>
+  </div>
+</body>
+</html>
