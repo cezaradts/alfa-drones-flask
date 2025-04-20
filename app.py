@@ -74,18 +74,17 @@ def listar_contatos():
 @app.route("/compras", methods=["POST"])
 def registrar_compra():
     dados = request.get_json()
-    try:
-        nova = Compra(
-            nome_completo=dados.get("nome"),
-            endereco=dados.get("endereco"),
-            cpf=dados.get("cpf"),
-            cep=dados.get("cep"),
-            valor_total=dados.get("valor_total"),
-            forma_pagamento=dados.get("forma_pagamento")
-        )
-        db.session.add(nova)
-        db.session.commit()
-        return jsonify({"mensagem": "Compra registrada com sucesso!", "id": nova.id}), 201
+    nova = Compra(
+        nome_completo=dados.get("nome"),
+        endereco=dados.get("endereco"),
+        cpf=dados.get("cpf"),
+        cep=dados.get("cep"),
+        valor_total=dados.get("valor_total"),
+        forma_pagamento=dados.get("forma_pagamento")
+    )
+    db.session.add(nova)
+    db.session.commit()
+    return jsonify({"mensagem": "Compra registrada com sucesso!", "id": nova.id}), 201
     except Exception as e:
         return jsonify({"erro": str(e)}), 400
 
