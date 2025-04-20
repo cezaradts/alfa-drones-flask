@@ -177,7 +177,9 @@
  if (resposta.ok) {
   alert("Compra finalizada com sucesso!");
   localStorage.removeItem("carrinho");
-  window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
+   setTimeout(() => {
+    window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
+  }, 1000); // espera 1 segundo antes de voltar
 }
       
     });
