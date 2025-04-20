@@ -2,12 +2,11 @@ from flask import Flask, jsonify, request, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
-import json
 
 app = Flask(__name__)
 CORS(app)
 
-# Configuração do banco de dados
+# Configuração do banco de dados no Render
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -31,7 +30,6 @@ class Compra(db.Model):
     forma_pagamento = db.Column(db.String(50), nullable=False)
 
 with app.app_context():
- 
     db.create_all()
 
 @app.route("/")
@@ -42,20 +40,21 @@ def index():
 def test():
     return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando perfeitamente!"})
 
+# Rota para envio de contato
 @app.route("/contato", methods=["POST"])
 def contato():
     dados = request.get_json()
-    nome = dados.get("nome")
-    email = dados.get("email")
-    telefone = dados.get("telefone")
-    mensagem = dados.get("mensagem")
-
-    novo = Contato(nome=nome, email=email, telefone=telefone, mensagem=mensagem)
+    novo = Contato(
+        nome=dados.get("nome"),
+        email=dados.get("email"),
+        telefone=dados.get("telefone"),
+        mensagem=dados.get("mensagem")
+    )
     db.session.add(novo)
     db.session.commit()
-
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
 
+# Rota para listar todos os contatos
 @app.route("/contatos", methods=["GET"])
 def listar_contatos():
     contatos = Contato.query.all()
@@ -70,21 +69,22 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
-# Rota POST de compra com dados enviados por JSON
+# Rota POST para registrar uma nova compra
 @app.route("/compras", methods=["POST"])
 def registrar_compra():
     dados = request.get_json()
-    nova = Compra(
-        nome_completo=dados.get("nome"),
-        endereco=dados.get("endereco"),
-        cpf=dados.get("cpf"),
-        cep=dados.get("cep"),
-        valor_total=dados.get("valor_total"),
-        forma_pagamento=dados.get("forma_pagamento")
-    )
-    db.session.add(nova)
-    db.session.commit()
-    return jsonify({"mensagem": "Compra registrada com sucesso!", "id": nova.id}), 201
+    try:
+        nova = Compra(
+            nome_completo=dados.get("nome"),
+            endereco=dados.get("endereco"),
+            cpf=dados.get("cpf"),
+            cep=dados.get("cep"),
+            valor_total=dados.get("valor_total"),
+            forma_pagamento=dados.get("forma_pagamento")
+        )
+        db.session.add(nova)
+        db.session.commit()
+        return jsonify({"mensagem": "Compra registrada com sucesso!", "id": nova.id}), 201
     except Exception as e:
         return jsonify({"erro": str(e)}), 400
 
@@ -105,8 +105,17 @@ def listar_compras():
         })
     return jsonify(resultado)
 
-# Rota para exibir relatório de uma compra
+# Rota para relatório de uma compra específica
 @app.route("/relatorio/<int:id>")
 def relatorio(id):
     compra = Compra.query.get_or_404(id)
     return render_template("relatorio.html", compra=compra)
+
+# Rota para relatório de todas as compras
+@app.route("/relatorio-compras")
+def relatorio_compras():
+    compras = Compra.query.all()
+    return render_template("relatorio_todas_compras.html", compras=compras)
+
+if __name__ == "__main__":
+    app.run(debug=True)
