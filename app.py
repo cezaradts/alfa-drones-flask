@@ -31,7 +31,7 @@ class Compra(db.Model):
     forma_pagamento = db.Column(db.String(50), nullable=False)
 
 with app.app_context():
-    db.drop_all()
+ 
     db.create_all()
 
 @app.route("/")
