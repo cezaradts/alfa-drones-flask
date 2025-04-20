@@ -174,13 +174,14 @@
         body: JSON.stringify(dadosCompra)
       });
 
-      if (resposta.ok) {
-        alert("Compra finalizada com sucesso!");
-        localStorage.removeItem("carrinho");
-        window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
-      } else {
-        alert("Erro ao registrar compra.");
-      }
+     if (resposta.ok) {
+  alert("Compra finalizada com sucesso!");
+  localStorage.removeItem("carrinho");
+  window.location.href = "https://cezaradts.github.io/alfa-drones/index.html";
+} else {
+  const erro = await resposta.json();
+  alert("Erro ao registrar compra: " + erro.erro);
+}
     });
 
     fetch("https://alfa-drones-flask-21.onrender.com/test")
