@@ -1,128 +1,264 @@
-from flask import Flask, jsonify, request, render_template, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-import os
-import json
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finalizar Compra | Alfa Drones</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <img src="images/logo.png" alt="Alfa Drones" class="logo" />
+        <nav>
+          <a href="https://cezaradts.github.io/alfa-drones/index.html">Início</a>
+          <a href="https://cezaradts.github.io/alfa-drones/modelos.html">Modelos</a>
+          <a href="https://cezaradts.github.io/alfa-drones-flask/carrinho.html">Carrinho</a>
+        </nav>
+      </div>
+    </header>
+<main>
+    <section>
+      <h2>Status da API:</h2>
+      <div id="resposta" style="font-weight: bold; color: green;">
+        Aguardando resposta da API...
+      </div>
+    </section>
 
-app = Flask(__name__)
-CORS(app)
+    <section class="carrinho">
+      <h2>Itens no Carrinho</h2>
+      <ul id="lista-carrinho"></ul>
+      <p id="total"></p>
+    </section>
 
-# Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+    <script>
+      const listaCarrinho = document.getElementById("lista-carrinho");
+      const totalElement = document.getElementById("total");
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let total = 0;
 
-# Modelo para contatos
-class Contato(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100))
-    email = db.Column(db.String(100))
-    telefone = db.Column(db.String(20))
-    mensagem = db.Column(db.Text)
+      function atualizarCarrinho() {
+        listaCarrinho.innerHTML = ""; // Limpa a lista
+        total = 0; // Reinicia o total
 
-# Modelo para compras
-class Compra(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome_completo = db.Column(db.String(100), nullable=False)
-    endereco = db.Column(db.String(200), nullable=False)
-    cpf = db.Column(db.String(14), nullable=False)
-    cep = db.Column(db.String(9), nullable=False)
-    produtos = db.Column(db.String(500), nullable=False)
-    valor_total = db.Column(db.Float, nullable=False)
+        if (carrinho.length === 0) {
+          listaCarrinho.innerHTML = "<li>O carrinho está vazio.</li>";
+          totalElement.textContent = "";
+        } else {
+          carrinho.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${item.modelo} - R$ ${parseFloat(item.preco).toFixed(2).replace(".", ",")}`;
 
-with app.app_context():
-    db.create_all()
+            // Botão para remover o item
+            const removerButton = document.createElement("button");
+            removerButton.textContent = "Remover";
+            removerButton.style.marginLeft = "10px";
+            removerButton.addEventListener("click", () => {
+              carrinho.splice(index, 1); // Remove o item do array
+              localStorage.setItem("carrinho", JSON.stringify(carrinho)); // Atualiza o localStorage
+              atualizarCarrinho(); // Atualiza a lista
+            });
 
-@app.route("/")
-def index():
-    return jsonify({"mensagem": "API Alfa Drones está funcionando!"})
+            li.appendChild(removerButton);
+            listaCarrinho.appendChild(li);
+            total += parseFloat(item.preco); // Soma o preço ao total
+          });
 
-@app.route("/test")
-def test():
-    return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando perfeitamente!"})
+          totalElement.textContent = `Total: R$ ${total.toFixed(2).replace(".", ",")}`;
+        }
+      }
 
-@app.route("/contato", methods=["POST"])
-def contato():
-    dados = request.get_json()
-    nome = dados.get("nome")
-    email = dados.get("email")
-    telefone = dados.get("telefone")
-    mensagem = dados.get("mensagem")
+      // Inicializa o carrinho ao carregar a página
+      atualizarCarrinho();
 
-    novo = Contato(nome=nome, email=email, telefone=telefone, mensagem=mensagem)
-    db.session.add(novo)
-    db.session.commit()
+    // Adiciona a classe ao botão de limpar carrinho
+    limparCarrinhoButton.className = "limpar-carrinho";
 
-    return jsonify({"mensagem": "Contato enviado com sucesso!"})
+    // Adiciona a classe ao botão de finalizar compra
+    finalizarCompraButton.className = "finalizar-compra";
 
-@app.route("/contatos", methods=["GET"])
-def listar_contatos():
-    contatos = Contato.query.all()
-    resultado = []
-    for c in contatos:
-        resultado.append({
-            "id": c.id,
-            "nome": c.nome,
-            "email": c.email,
-            "telefone": c.telefone,
-            "mensagem": c.mensagem
-        })
-    return jsonify(resultado)
-# compra sucesso
-@app.route("/compra", methods=["POST"])
-def compra():
-    dados = request.get_json()
-    nome = dados.get("nome_completo")
-    email = dados.get("email_1")
-    telefone = dados.get("telefone_1")
-    mensagem = dados.get("valor_compra")
+    // Adiciona funcionalidade para exibir mensagem ao limpar o carrinho
+    limparCarrinhoButton.addEventListener("click", () => {
+      alert("Carrinho limpo com sucesso!");
+      localStorage.removeItem("carrinho");
+      carrinho = [];
+      atualizarCarrinho(); // Atualiza a lista
+      alert("Carrinho limpo com sucesso!"); // Mensagem adicional após limpar
+    });
+  </script>
+</main>
 
-    novo = Compra(nome_completo=nome_completo, email_1=email_1, telefone_1=telefone_1, mensagem=mensagem, valor_compra=valor_compra)
-    db.session.add(novo)
-    db.session.commit()
+  <footer>
+    <p>&copy; 2025 Alfa Drones</p>
+  </footer>
 
-    return jsonify({"mensagem": "Compra enviada com sucesso!"})
+  <!-- Scripts -->
+  <script>
+    // Verifica se a API está ativa
+    fetch('https://alfa-drones-flask-21.onrender.com/test')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("resposta").innerText = data.mensagem;
+      })
+      .catch(error => {
+        console.error('Erro ao conectar com a API:', error);
+        document.getElementById("resposta").innerText = "Erro ao conectar com a API.";
+        document.getElementById("resposta").style.color = "red";
+      });
 
-@app.route("/finalizar_compra", methods=["POST"])
-def finalizar_compra():
-    nome = request.form.get("nome_completo")
-    endereco = request.form.get("endereco")
-    cpf = request.form.get("cpf")
-    cep = request.form.get("cep")
-    produtos = request.form.get("produtos")
-    valor_total = float(request.form.get("valor_total"))
+   
+  </script>
+</body>
+</html>
+    
+    <section class="finalizar">
+      <h2>Finalizar Compra</h2>
+      <section class="carrinho">
+  
+      <div id="etapa1">
+        <h3>Informações Pessoais</h3>
+        <form id="form-informacoes">
+          <label for="nome">Nome Completo:</label>
+          <input type="text" id="nome" name="nome" required />
 
-    nova = Compra(
-        nome_completo=nome,
-        endereco=endereco,
-        cpf=cpf,
-        cep=cep,
-        produtos=produtos,
-        valor_total=valor_total
-    )
-    db.session.add(nova)
-    db.session.commit()
-    return redirect(f"/relatorio/{nova.id}")
+          <label for="cpf">CPF:</label>
+          <input type="text" id="cpf" name="cpf" required />
 
-#rota compras nova
-@app.route("/compras", methods=["GET"])
-def listar_compras():
-    compras = Compra.query.all()
-    resultado = []
-    for c in compras:
-        resultado.append({
-            "id": c.id,
-            "nome_completo": c.nome_completo,
-            "endereco": c.endereco,
-            "cpf": c.cpf,
-            "cep": c.cep,
-            "produtos": json.loads(c.produtos),
-            "valor_total": c.valor_total
-        })
-    return jsonify(resultado)
+          <label for="endereco">Endereço:</label>
+          <input type="text" id="endereco" name="endereco" required />
 
-@app.route("/relatorio/<int:id>")
-def relatorio(id):
-    compra = Compra.query.get_or_404(id)
-    produtos = json.loads(compra.produtos)
-    return render_template("relatorio.html", compra=compra, produtos=produtos)
+          <label for="cep">CEP:</label>
+          <input type="text" id="cep" name="cep" required />
+          
+
+          <button type="button" id="btn-avancar">Avançar</button>
+        </form>
+      </div>
+
+      <div id="etapa2" style="display: none">
+        <h3>Escolha o Método de Pagamento</h3>
+        <form id="form-pagamento">
+          <div>
+            <input type="radio" id="credito" name="pagamento" value="credito" required />
+            <label for="credito">Cartão de Crédito</label>
+          </div>
+          <div>
+            <input type="radio" id="debito" name="pagamento" value="debito" />
+            <label for="debito">Cartão de Débito</label>
+          </div>
+          <div>
+            <input type="radio" id="pix" name="pagamento" value="pix" />
+            <label for="pix">PIX</label>
+          </div>
+          <div>
+            <input type="radio" id="boleto" name="pagamento" value="boleto" />
+            <label for="boleto">Boleto Bancário</label>
+          </div>
+          <button type="button" id="btn-voltar-etapa1">Voltar</button>
+          <button type="button" id="btn-selecionar-pagamento">Avançar</button>
+        </form>
+      </div>
+
+      <div id="etapa3" style="display: none">
+        <h3>Detalhes do Pagamento</h3>
+        <div id="detalhes-cartao" style="display: none">
+          <form id="form-cartao">
+            <label for="numero-cartao">Número do Cartão:</label>
+            <input type="text" id="numero-cartao" name="numero-cartao" required />
+
+            <label for="nome-cartao">Nome no Cartão:</label>
+            <input type="text" id="nome-cartao" name="nome-cartao" required />
+
+            <label for="validade-cartao">Validade:</label>
+            <input type="text" id="validade-cartao" name="validade-cartao" required />
+
+            <label for="cvv-cartao">CVV:</label>
+            <input type="text" id="cvv-cartao" name="cvv-cartao" required />
+          </form>
+        </div>
+
+        <div id="detalhes-pix" style="display: none">
+          <p>Use o QR Code abaixo para realizar o pagamento:</p>
+          <img src="images/qrcode-ficticio.png" alt="QR Code PIX" />
+        </div>
+
+        <div id="detalhes-boleto" style="display: none">
+          <p>Clique no botão abaixo para gerar o boleto bancário:</p>
+          <button id="btn-gerar-boleto">Gerar Boleto</button>
+        </div>
+
+        <button type="button" id="btn-voltar-etapa2">Voltar</button>
+        <button id="btn-finalizar-compra">Finalizar Compra</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 Alfa Drones. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+      const etapa1 = document.getElementById("etapa1");
+      const etapa2 = document.getElementById("etapa2");
+      const etapa3 = document.getElementById("etapa3");
+      const btnAvancar = document.getElementById("btn-avancar");
+      const btnSelecionarPagamento = document.getElementById("btn-selecionar-pagamento");
+      const btnFinalizarCompra = document.getElementById("btn-finalizar-compra");
+      const btnVoltarEtapa1 = document.getElementById("btn-voltar-etapa1");
+      const btnVoltarEtapa2 = document.getElementById("btn-voltar-etapa2");
+      const detalhesCartao = document.getElementById("detalhes-cartao");
+      const detalhesPix = document.getElementById("detalhes-pix");
+      const detalhesBoleto = document.getElementById("detalhes-boleto");
+      const btnGerarBoleto = document.getElementById("btn-gerar-boleto");
+
+      // Avançar para a etapa 2
+      btnAvancar.addEventListener("click", () => {
+        etapa1.style.display = "none";
+        etapa2.style.display = "block";
+      });
+
+      // Voltar para a etapa 1
+      btnVoltarEtapa1.addEventListener("click", () => {
+        etapa2.style.display = "none";
+        etapa1.style.display = "block";
+      });
+
+      // Avançar para a etapa 3
+      btnSelecionarPagamento.addEventListener("click", () => {
+        const metodoPagamento = document.querySelector('input[name="pagamento"]:checked').value;
+
+        etapa2.style.display = "none";
+        etapa3.style.display = "block";
+
+        if (metodoPagamento === "credito" || metodoPagamento === "debito") {
+          detalhesCartao.style.display = "block";
+        } else if (metodoPagamento === "pix") {
+          detalhesPix.style.display = "block";
+        } else if (metodoPagamento === "boleto") {
+          detalhesBoleto.style.display = "block";
+        }
+      });
+
+      // Voltar para a etapa 2
+      btnVoltarEtapa2.addEventListener("click", () => {
+        etapa3.style.display = "none";
+        etapa2.style.display = "block";
+        detalhesCartao.style.display = "none";
+        detalhesPix.style.display = "none";
+        detalhesBoleto.style.display = "none";
+      });
+
+      // Gerar boleto fictício
+      btnGerarBoleto.addEventListener("click", () => {
+        alert("Boleto gerado com sucesso!");
+      });
+
+      // Finalizar compra
+      btnFinalizarCompra.addEventListener("click", () => {
+        alert("Compra finalizada com sucesso! Obrigado por comprar na Alfa Drones.");
+        localStorage.removeItem("carrinho"); // Limpa o carrinho
+        window.location.href = "https://cezaradts.github.io/alfa-drones/index.html"; // Redireciona para a página inical
+      });
+      
+    </script>
+  </body>
+</html>
