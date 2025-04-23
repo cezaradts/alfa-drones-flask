@@ -30,6 +30,7 @@ class Compra(db.Model):
     cep = db.Column(db.String(9), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
+    itens = db.Column(db.JSON) 
 
 #zerar banco de dados (usar comando drop_all para resetar bando de dados)
 with app.app_context():
@@ -86,6 +87,7 @@ def registrar_compra():
             mail=dados.get("mail"),
             cep=dados.get("cep"),
             valor_total=dados.get("valor_total"),
+            itens=dados.get("itens"),
             forma_pagamento=dados.get("forma_pagamento")
         )
         db.session.add(nova)
