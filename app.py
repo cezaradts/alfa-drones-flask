@@ -30,10 +30,12 @@ class Compra(db.Model):
     cep = db.Column(db.String(9), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
-
+    
+from app import app, db
 with app.app_context():
      db.drop_all()
     db.create_all()
+    print("Banco de dados resetado com sucesso")
 
 @app.route("/")
 def index():
