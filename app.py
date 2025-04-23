@@ -31,9 +31,9 @@ class Compra(db.Model):
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
 
-#zerar banco de dados
+#zerar banco de dados (usar comando drop_all para resetar bando de dados)
 with app.app_context():
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
 
 @app.route("/")
