@@ -30,7 +30,7 @@ class Compra(db.Model):
     cep = db.Column(db.String(9), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
-    itens = db.Column(db.JSON) 
+    itens = db.Column(db.JSON), nullable=False)
 
 #zerar banco de dados (usar comando drop_all para resetar bando de dados)
 with app.app_context():
