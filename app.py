@@ -25,6 +25,8 @@ class Compra(db.Model):
     nome_completo = db.Column(db.String(100), nullable=False)
     endereco = db.Column(db.String(200), nullable=False)
     cpf = db.Column(db.String(14), nullable=False)
+    whatsapp = db.Column(db.String(20))
+    mail = db.Column(db.String(100))
     cep = db.Column(db.String(9), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
@@ -78,6 +80,8 @@ def registrar_compra():
             nome_completo=dados.get("nome"),
             endereco=dados.get("endereco"),
             cpf=dados.get("cpf"),
+            whatsapp.get("whatsapp"),
+            mail.get("mail")
             cep=dados.get("cep"),
             valor_total=dados.get("valor_total"),
             forma_pagamento=dados.get("forma_pagamento")
@@ -99,6 +103,8 @@ def listar_compras():
             "nome_completo": c.nome_completo,
             "endereco": c.endereco,
             "cpf": c.cpf,
+            "whatsapp": c.whatsapp,
+            "mail": c.mail,
             "cep": c.cep,
             "valor_total": c.valor_total,
             "forma_pagamento": c.forma_pagamento
