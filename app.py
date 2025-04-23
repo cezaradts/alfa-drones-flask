@@ -111,6 +111,7 @@ def listar_compras():
             "mail": c.mail,
             "cep": c.cep,
             "valor_total": c.valor_total,
+            "itens": c.itens,
             "forma_pagamento": c.forma_pagamento
         })
     return jsonify(resultado)
