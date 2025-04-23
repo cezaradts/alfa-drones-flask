@@ -32,10 +32,12 @@ class Compra(db.Model):
     forma_pagamento = db.Column(db.String(50), nullable=False)
     
 from app import app, db
+
 with app.app_context():
-     db.drop_all()
+    db.drop_all()
     db.create_all()
-    print("Banco de dados resetado com sucesso")
+    print("Banco de dados resetado com sucesso!")
+
 
 @app.route("/")
 def index():
