@@ -52,10 +52,12 @@ def registrar_compra():
     return jsonify({"mensagem": "Compra registrada com sucesso!"})
 
 # Inicializar o banco de dados
-@app.before_first_request
-def criar_tabelas():
+from app import app, db
+
+with app.app_context():
     db.drop_all()
     db.create_all()
-
+    print("Banco de dados resetado com sucesso!")
+    
 if __name__ == "__main__":
     app.run(debug=True)
