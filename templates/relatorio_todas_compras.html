@@ -2,11 +2,48 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Relatório de Compras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Compras | Alfa Drones</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #333;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+  </style>
 </head>
 <body>
   <h1>Relatório de Compras</h1>
-  <table border="1" cellpadding="8" cellspacing="0">
+
+  <table>
     <thead>
       <tr>
         <th>ID</th>
@@ -18,29 +55,29 @@
         <th>CEP</th>
         <th>Valor Total</th>
         <th>Forma de Pagamento</th>
-        <th>Itens</th>
+        <th>Itens do Carrinho</th>
       </tr>
     </thead>
     <tbody>
       {% for compra in compras %}
-        <tr>
-          <td>{{ compra.id }}</td>
-          <td>{{ compra.nome }}</td>
-          <td>{{ compra.cpf }}</td>
-          <td>{{ compra.whatsapp }}</td>
-          <td>{{ compra.mail }}</td>
-          <td>{{ compra.endereco }}</td>
-          <td>{{ compra.cep }}</td>
-          <td>R$ {{ "%.2f"|format(compra.valor_total) }}</td>
-          <td>{{ compra.forma_pagamento }}</td>
-          <td>
-            <ul>
-              {% for item in compra.itens | safe | loads %}
-                <li>{{ item['modelo'] }} - R$ {{ item['preco'] }}</li>
-              {% endfor %}
-            </ul>
-          </td>
-        </tr>
+      <tr>
+        <td>{{ compra.id }}</td>
+        <td>{{ compra.nome }}</td>
+        <td>{{ compra.cpf }}</td>
+        <td>{{ compra.whatsapp }}</td>
+        <td>{{ compra.mail }}</td>
+        <td>{{ compra.endereco }}</td>
+        <td>{{ compra.cep }}</td>
+        <td>R$ {{ "%.2f"|format(compra.valor_total) }}</td>
+        <td>{{ compra.forma_pagamento }}</td>
+        <td>
+          <ul>
+            {% for item in compra.itens | safe | loads %}
+              <li>{{ item['modelo'] }} - R$ {{ item['preco'] }}</li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
