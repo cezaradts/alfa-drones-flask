@@ -30,10 +30,9 @@ class Compra(db.Model):
     cep = db.Column(db.String(9), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)
     forma_pagamento = db.Column(db.String(50), nullable=False)
+    itens = db.Column(db.Text, nullable=False)
 
-#zerar banco de dados (usar comando drop_all para resetar bando de dados)
 with app.app_context():
-   #db.drop_all() 
     db.create_all()
 
 @app.route("/")
@@ -44,7 +43,6 @@ def index():
 def test():
     return jsonify({"status": "OK", "mensagem": "Rota de teste funcionando perfeitamente!"})
 
-# Rota para envio de contato
 @app.route("/contato", methods=["POST"])
 def contato():
     dados = request.get_json()
@@ -58,7 +56,6 @@ def contato():
     db.session.commit()
     return jsonify({"mensagem": "Contato enviado com sucesso!"})
 
-# Rota para listar todos os contatos
 @app.route("/contatos", methods=["GET"])
 def listar_contatos():
     contatos = Contato.query.all()
@@ -73,7 +70,6 @@ def listar_contatos():
         })
     return jsonify(resultado)
 
-# Rota POST para registrar uma nova compra
 @app.route("/compras", methods=["POST"])
 def registrar_compra():
     dados = request.get_json()
@@ -86,7 +82,8 @@ def registrar_compra():
             mail=dados.get("mail"),
             cep=dados.get("cep"),
             valor_total=dados.get("valor_total"),
-            forma_pagamento=dados.get("forma_pagamento")
+            forma_pagamento=dados.get("forma_pagamento"),
+            itens=dados.get("itens")
         )
         db.session.add(nova)
         db.session.commit()
@@ -94,7 +91,6 @@ def registrar_compra():
     except Exception as e:
         return jsonify({"erro": str(e)}), 400
 
-# Rota GET para listar todas as compras
 @app.route("/compras", methods=["GET"])
 def listar_compras():
     compras = Compra.query.all()
@@ -109,17 +105,16 @@ def listar_compras():
             "mail": c.mail,
             "cep": c.cep,
             "valor_total": c.valor_total,
-            "forma_pagamento": c.forma_pagamento
+            "forma_pagamento": c.forma_pagamento,
+            "itens": c.itens
         })
     return jsonify(resultado)
 
-# Rota para relatório de uma compra específica
 @app.route("/relatorio/<int:id>")
 def relatorio(id):
     compra = Compra.query.get_or_404(id)
     return render_template("relatorio.html", compra=compra)
 
-# Rota para relatório de todas as compras
 @app.route("/relatorio-compras")
 def relatorio_compras():
     compras = Compra.query.all()
