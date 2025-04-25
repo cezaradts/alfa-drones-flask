@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +7,7 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { color: #333; text-align: center; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; vertical-align: top; }
     th { background-color: #f0f0f0; }
   </style>
 </head>
@@ -41,7 +40,12 @@
         <td>{{ compra.cep }}</td>
         <td>{{ compra.forma_pagamento }}</td>
         <td>R$ {{ '%.2f' % compra.valor_total }}</td>
-        <td>{{ compra.itens }}</td>
+        <td>
+          {% set lista_itens = compra.itens | safe | loads %}
+          {% for item in lista_itens %}
+            {{ item.modelo }} - R$ {{ '%.2f'|format(item.preco | float) }}<br>
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>
