@@ -30,6 +30,7 @@
     </thead>
     <tbody>
       {% for compra in compras %}
+      {% from 'jinja2.ext' import do as jinja_do %}
       <tr>
         <td>{{ compra.id }}</td>
         <td>{{ compra.nome_completo }}</td>
@@ -41,11 +42,11 @@
         <td>{{ compra.forma_pagamento }}</td>
         <td>R$ {{ '%.2f' % compra.valor_total }}</td>
         <td>
-          {% set lista_itens = compra.itens | safe | loads %}
-          {% for item in lista_itens %}
-            {{ item.modelo }} - R$ {{ '%.2f'|format(item.preco | float) }}<br>
-          {% endfor %}
-        </td>
+  {% set lista_itens = compra.itens | safe | loads %}
+  {% for item in lista_itens %}
+    {{ item.modelo }} - R$ {{ '%.2f'|format(item.preco | float) }}<br>
+  {% endfor %}
+</td>
       </tr>
       {% endfor %}
     </tbody>
