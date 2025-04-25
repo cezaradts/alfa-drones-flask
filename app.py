@@ -33,6 +33,7 @@ class Compra(db.Model):
     itens = db.Column(db.Text, nullable=False)
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 @app.route("/")
